@@ -51,13 +51,14 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.maskedTextBox6 = new System.Windows.Forms.MaskedTextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(7, 292);
+            this.button1.Location = new System.Drawing.Point(4, 311);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -67,7 +68,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(109, 292);
+            this.button6.Location = new System.Drawing.Point(109, 311);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 6;
@@ -183,7 +184,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(59, 342);
+            this.button2.Location = new System.Drawing.Point(59, 367);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 22;
@@ -269,12 +270,23 @@
             this.label9.TabIndex = 0;
             this.label9.Text = "Radius";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(59, 273);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 27;
+            this.button3.Text = "More Seeds";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(196, 377);
+            this.ClientSize = new System.Drawing.Size(196, 415);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button2);
@@ -329,6 +341,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.MaskedTextBox maskedTextBox6;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button3;
     }
 }
 

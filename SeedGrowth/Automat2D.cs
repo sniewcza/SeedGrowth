@@ -79,6 +79,7 @@ namespace CellularAutomata
             get
             {
                 return work;
+                
             }
 
             set

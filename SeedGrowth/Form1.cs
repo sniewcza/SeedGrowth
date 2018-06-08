@@ -324,10 +324,12 @@ namespace SeedGrowth
             {
                 case "Stop":
                     Automata?.stop();
-                    button6.Text = Automata==null ? "Stop":"Run"  ;
+                    button3.Enabled = true;
+                    button6.Text = Automata==null ? "Stop":"Run";
                     break;
                 case "Run":
                     worker.RunWorkerAsync();
+                    button3.Enabled = false;
                     button6.Text = Automata == null ? "Run" : "Stop";
                     break;
             }
@@ -349,6 +351,13 @@ namespace SeedGrowth
                     
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int seeds = Convert.ToInt32(maskedTextBox3.Text == "" ? "3" : maskedTextBox3.Text);
+            seedgtowth.setSeedsRandomly(seeds);
+            refreshView2();
         }
     }
 }
