@@ -31,6 +31,7 @@ namespace SeedGrowth
     public partial class Form1 : Form
     {
          SeedGrowth seedgtowth = null;
+        MonteCarlo monte = null;
          Form2 simulationDisplayer;
         BackgroundWorker worker = new BackgroundWorker();
         int width;
@@ -217,16 +218,49 @@ namespace SeedGrowth
 
         private void Form2_Disposed(object sender, EventArgs e)
         {
-            seedgtowth.stop();
+            seedgtowth?.stop();
+            monte?.stop();
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {                         
                 seedgtowth.Iterate(refreshView2, neigbhourhoodType );            
         }
-        
+
+        private void Worker_DoWork2(object sender, DoWorkEventArgs e)
+        {
+            monte.Iterate(refreshView3, neigbhourhoodType.Moore);
+        }
 
 
+        private void refreshView3()
+        {
+            Bitmap bitmap = new Bitmap(width, height);
+
+            // wersja rownoległa
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
+            bitmap.UnlockBits(bitmapData);
+            IntPtr ptr = bitmapData.Scan0;
+            Parallel.For(0, monte.Ibound, index =>
+            {
+
+                Color color;
+
+                for (int j = 0; j <= monte.Jbound; j++)
+                {
+
+                    int offset = index * 4 + j * bitmapData.Stride;
+                    color = Color.FromArgb(monte.Cells[index, j]);
+                    Marshal.WriteByte(ptr, offset, color.R);
+                    Marshal.WriteByte(ptr, offset + 1, color.G);
+                    Marshal.WriteByte(ptr, offset + 2, color.B);
+                    Marshal.WriteByte(ptr, offset + 3, color.A);
+
+
+                }
+            });
+            simulationDisplayer.pictureBox.Image = bitmap;
+        }
         private void refreshView2()
         {
             Bitmap bitmap = new Bitmap(width, height);
@@ -358,6 +392,31 @@ namespace SeedGrowth
             int seeds = Convert.ToInt32(maskedTextBox3.Text == "" ? "3" : maskedTextBox3.Text);
             seedgtowth.setSeedsRandomly(seeds);
             refreshView2();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            width = Convert.ToInt32(maskedTextBox1.Text == "" ? "300" : maskedTextBox1.Text);
+            height = Convert.ToInt32(maskedTextBox2.Text == "" ? "300" : maskedTextBox2.Text);
+            int seeds = Convert.ToInt32(maskedTextBox3.Text == "" ? "3" : maskedTextBox3.Text);
+
+            monte = new MonteCarlo(width, height, seeds);
+
+
+            simulationDisplayer = new Form2();
+            simulationDisplayer.Size = new Size(width + 20, height + 45);
+            simulationDisplayer.pictureBox.Size = new Size(width, height);
+            simulationDisplayer.Disposed += Form2_Disposed;
+            //simulationDisplayer.pictureBox.MouseClick += PictureBox1_MouseClick1;
+            simulationDisplayer.Show();
+
+
+
+            worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork2;
+            worker.WorkerSupportsCancellation = true;
+            worker.RunWorkerAsync();
+
         }
     }
 }

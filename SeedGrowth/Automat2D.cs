@@ -193,24 +193,7 @@ namespace CellularAutomata
 
             ibound = cells.GetUpperBound(0);
             jbound = cells.GetUpperBound(1);
-
-            //cells[23, 24] = 1;
-            //cells[23, 25] = 1;
-            //cells[23, 26] = 1;
-            //cells[24, 24] = 1;
-            //cells[25, 25] = 1;
-            //cells[100, 100] = 1;
-            //cells[100, 101] = 1;
-            //cells[100, 102] = 1;
-            //cells[100, 103] = 1;
-            //cells[100, 104] = 1;
-            //cells[100, 105] = 1;
-            //cells[100, 106] = 1;
-            //cells[100, 107] = 1;
-            //cells[100, 108] = 1;
-            //cells[100, 109] = 1;
-            //cells[100, 110] = 1;
-            //cells[100, 111] = 1;
+     
 
         }
 
@@ -261,9 +244,11 @@ namespace CellularAutomata
             //parallel version
             Parallel.For(0, ibound + 1, index =>
                {
+                   Random random = new Random(DateTime.Now.Millisecond);
                    for (int j = 0; j < newCells.GetLength(1); j++)
-                       newCells[index, j] = getCellstate(getneighbours(index, j), index, j);
-
+                   { 
+                       newCells[index,j]  = getCellstate(getneighbours(index, j), index, j);
+                   }
                });
             //sequential version
             //for (int i = 0; i < newCells.GetLength(0); i++)
