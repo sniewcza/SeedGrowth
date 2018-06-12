@@ -32,6 +32,7 @@ namespace CellularAutomata
         private int jbound;
        private volatile bool work = false;
         private getneighbours getneighbours;
+        private Random random = new Random(DateTime.Now.Millisecond);
         
         
         public int[,] Cells
@@ -603,7 +604,7 @@ namespace CellularAutomata
 
         private List<int> getNeighboursRandomPentagonal(int i, int j)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+            
 
             List<int> neighbours = getNeighboursMoore(i, j);
            
@@ -841,7 +842,7 @@ namespace CellularAutomata
         
         private List<int> getNeighboursRandomPentagonalPeriodic(int i, int j)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+           
 
             List<int> neighbours = new List<int>();
             neighbours = getNeighboursMoorePeriodic(i, j);
@@ -874,7 +875,7 @@ namespace CellularAutomata
 
         private List<int> getNeighboursRandomHexagonal(int i,int j)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+            
 
             List<int> neighbours = neighbours = getNeighboursMoore(i, j);
             
@@ -1040,7 +1041,7 @@ namespace CellularAutomata
 
         private List<int> getNeighboursRandomHexagonalPeriodic(int i, int j)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+           
 
             List<int> neighbours = getNeighboursMoorePeriodic(i, j);
             

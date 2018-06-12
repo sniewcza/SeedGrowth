@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SeedGrowth
     {
 
         private List<Color> colors = new List<Color>() { Color.FromKnownColor(KnownColor.Coral) };
+        Random random = new Random(DateTime.Now.Millisecond);
         public SeedGrowth(int N, int M) : base(N, M)
         {
 
@@ -46,7 +48,8 @@ namespace SeedGrowth
         }
         public void setSeed(int x, int y)
         {
-            Color color = Color.FromKnownColor((colors[colors.Count - 1].ToKnownColor() + 1));
+            
+            Color color = Color.FromArgb(255,random.Next(0,256), random.Next(0, 256), random.Next(0, 256));
             colors.Add(color);
             Cells[x, y] = colors[colors.Count - 1].ToArgb();
 
@@ -86,7 +89,7 @@ namespace SeedGrowth
 
        public void setSeedsRandomly(int NumberofSeeds)
         {
-            Random random = new Random(DateTime.Now.Second);
+           // Random random = new Random(DateTime.Now.Second);
 
             for (int i = 0; i < NumberofSeeds; i++)
             {
@@ -126,3 +129,4 @@ namespace SeedGrowth
         }
     }
 }
+
