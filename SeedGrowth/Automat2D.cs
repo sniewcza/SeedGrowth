@@ -242,18 +242,18 @@ namespace CellularAutomata
            
             int[,] newCells = new int[cells.GetLength(0), cells.GetLength(1)];
             //parallel version
-            Parallel.For(0, ibound + 1, index =>
-               {
-                   Random random = new Random(DateTime.Now.Millisecond);
-                   for (int j = 0; j < newCells.GetLength(1); j++)
-                   { 
-                       newCells[index,j]  = getCellstate(getneighbours(index, j), index, j);
-                   }
-               });
-            //sequential version
-            //for (int i = 0; i < newCells.GetLength(0); i++)
-            //    for (int j = 0; j < newCells.GetLength(1); j++)
-            //        newCells[i, j] = getCellstate(getneighbours(i, j), i, j);
+            //Parallel.For(0, ibound + 1, index =>
+            //   {
+            //       Random random = new Random(DateTime.Now.Millisecond);
+            //       for (int j = 0; j < newCells.GetLength(1); j++)
+            //       { 
+            //           newCells[index,j]  = getCellstate(getneighbours(index, j), index, j);
+            //       }
+            //   });
+           // sequential version
+            for (int i = 0; i < newCells.GetLength(0); i++)
+                for (int j = 0; j < newCells.GetLength(1); j++)
+                    newCells[i, j] = getCellstate(getneighbours(i, j), i, j);
 
             cells = newCells;
         }

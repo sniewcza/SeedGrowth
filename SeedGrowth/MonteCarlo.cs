@@ -11,12 +11,12 @@ namespace SeedGrowth
     {
         int[,] Id;
         List<Color> colors;
-
+        Random random;
 
 
         public MonteCarlo(int N, int M, int numberofseeds) : base(N, M)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+             random = new Random(DateTime.Now.Millisecond);
             Id = new int[N, M];
             colors = new List<Color>();
             for (int i = 0; i < numberofseeds; i++)
@@ -32,14 +32,14 @@ namespace SeedGrowth
 
         public override int getCellstate(List<int> neighbours, int i, int j)
         {
-            Random random = new Random(DateTime.Now.Millisecond);
+            
             int initialEnergy = neighbours.Where(value => value != Cells[i, j]).Count();
             int endEnergy;
             Color newColor = default(Color);
             while (true)
             {
                 
-                newColor = colors[random.Next(0, colors.Count)];
+                newColor = colors[random.Next(0,colors.Count)];
                 endEnergy = neighbours.Where(value => value != newColor.ToArgb()).Count();
                 if (endEnergy <= initialEnergy)
                     break;
