@@ -1,4 +1,4 @@
-﻿namespace SeedGrowth
+﻿namespace CellularAutomata
 {
     partial class Form1
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CellularAutomata;
 using System.Runtime.InteropServices;
-namespace SeedGrowth
+namespace CellularAutomata
 {
     enum BoundaryConditions
     {

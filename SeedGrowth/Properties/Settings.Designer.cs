@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SeedGrowth.Properties
+namespace CellularAutomata.Properties
 {
 
 

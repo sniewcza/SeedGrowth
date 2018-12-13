@@ -5,7 +5,7 @@ using System.Linq;
 using CellularAutomata;
 using System.Drawing;
 
-namespace SeedGrowth
+namespace CellularAutomata
 {
     class SeedGrowth : Automat2D
     {

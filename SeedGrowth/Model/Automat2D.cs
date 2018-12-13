@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CellularAutomata
 {
-    enum structure
+   public enum structure
     {
         Immutable,
         Oscilator,
@@ -17,7 +17,7 @@ namespace CellularAutomata
         Moore,
         MoorePeriodic,
         VonNoyman,
-        VonNoymanPeriodic,     
+        VonNoymanPeriodic,
         HexagonalRandom,
         HexagonalRandomPeriodic,
         PentagonalRandom,
@@ -30,14 +30,14 @@ namespace CellularAutomata
         private int[,] cells;
         private int ibound;
         private int jbound;
-       private volatile bool work = false;
+        private volatile bool work = false;
         private getneighbours getneighbours;
         private Random random = new Random(DateTime.Now.Millisecond);
-        
-        
+
+
         public int[,] Cells
         {
-            
+
             get
             {
                 return cells;
@@ -80,7 +80,7 @@ namespace CellularAutomata
             get
             {
                 return work;
-                
+
             }
 
             set
@@ -91,20 +91,20 @@ namespace CellularAutomata
 
         public void stop() { work = false; }
 
-        public void setStructure( structure structure)
+        public void setStructure(structure structure)
         {
             int xmid = ibound / 2;
             int ymid = jbound / 2;
-            
-            switch(structure)
+
+            switch (structure)
             {
                 case structure.Immutable:
                     cells[xmid, ymid] = 1;
-                    cells[xmid, ymid+1] = 1;
-                    cells[xmid+1, ymid-1] = 1;
-                    cells[xmid+1, ymid+2] = 1;
-                    cells[xmid+2, ymid] = 1;
-                    cells[xmid+2, ymid+1] = 1;
+                    cells[xmid, ymid + 1] = 1;
+                    cells[xmid + 1, ymid - 1] = 1;
+                    cells[xmid + 1, ymid + 2] = 1;
+                    cells[xmid + 2, ymid] = 1;
+                    cells[xmid + 2, ymid + 1] = 1;
                     break;
                 case structure.Oscilator:
                     cells[xmid, ++ymid] = 1;
@@ -121,25 +121,25 @@ namespace CellularAutomata
                     break;
                 case structure.Glider:
                     cells[xmid, ymid] = 1;
-                    cells[xmid+1, ymid] = 1;
-                    cells[xmid+2, ymid] = 1;
-                    cells[xmid, ymid+1] = 1;
-                    cells[xmid+1, ymid+2] = 1;
+                    cells[xmid + 1, ymid] = 1;
+                    cells[xmid + 2, ymid] = 1;
+                    cells[xmid, ymid + 1] = 1;
+                    cells[xmid + 1, ymid + 2] = 1;
                     break;
                 case structure.Dakota:
                     cells[xmid, ymid] = 1;
-                    cells[xmid, ymid-1] = 1;
-                    cells[xmid, ymid-2] = 1;
-                    cells[xmid+1, ymid] = 1;
+                    cells[xmid, ymid - 1] = 1;
+                    cells[xmid, ymid - 2] = 1;
+                    cells[xmid + 1, ymid] = 1;
                     cells[xmid + 2, ymid] = 1;
-                    cells[xmid +3 , ymid] = 1;
+                    cells[xmid + 3, ymid] = 1;
                     cells[xmid + 1, ymid - 3] = 1;
                     cells[xmid + 4, ymid - 1] = 1;
                     cells[xmid + 4, ymid - 3] = 1;
                     break;
             }
         }
-        public void setStructure(structure structure, int x,int y)
+        public void setStructure(structure structure, int x, int y)
         {
             int xmid = x;
             int ymid = y;
@@ -188,7 +188,7 @@ namespace CellularAutomata
             }
         }
 
-        public Automat2D(int N,int M)
+        public Automat2D(int N, int M)
         {
             cells = new int[N, M];
 
@@ -221,43 +221,43 @@ namespace CellularAutomata
             switch (type)
             {
                 case neigbhourhoodType.MoorePeriodic:
-                    return new getneighbours(getNeighboursMoorePeriodic);                   
+                    return new getneighbours(getNeighboursMoorePeriodic);
                 case neigbhourhoodType.VonNoyman:
-                   return new getneighbours(getNeigboursVonNoyman);                 
+                    return new getneighbours(getNeigboursVonNoyman);
                 case neigbhourhoodType.VonNoymanPeriodic:
-                   return new getneighbours(getNeigboursVonNoymanPeriodic);                
+                    return new getneighbours(getNeigboursVonNoymanPeriodic);
                 case neigbhourhoodType.Moore:
-                    return new getneighbours(getNeighboursMoore);                   
+                    return new getneighbours(getNeighboursMoore);
                 case neigbhourhoodType.HexagonalRandom:
-                    return new getneighbours(getNeighboursRandomHexagonal);                 
+                    return new getneighbours(getNeighboursRandomHexagonal);
                 case neigbhourhoodType.HexagonalRandomPeriodic:
-                   return new getneighbours(getNeighboursRandomHexagonalPeriodic);                    
+                    return new getneighbours(getNeighboursRandomHexagonalPeriodic);
                 case neigbhourhoodType.PentagonalRandom:
-                    return new getneighbours(getNeighboursRandomPentagonal);                   
+                    return new getneighbours(getNeighboursRandomPentagonal);
                 case neigbhourhoodType.PentagonalRandomPeriodic:
                     return new getneighbours(getNeighboursRandomPentagonalPeriodic);
-                    
+
             }
             return null;
         }
 
-        public virtual void Iterate(Action oniterate,neigbhourhoodType neigbhourhoodType)
+        public virtual void Iterate(Action oniterate, neigbhourhoodType neigbhourhoodType)
         {
 
             getneighbours = getNeighboursDelegate(neigbhourhoodType);
             work = true;
             while (work)
             {
-                
+
                 ComputeNextIterationCells();
                 oniterate();
             }
         }
-            
-        
+
+
         private void ComputeNextIterationCells()
         {
-           
+
             int[,] newCells = new int[cells.GetLength(0), cells.GetLength(1)];
             //parallel version
             Parallel.For(0, ibound + 1, index =>
@@ -274,80 +274,80 @@ namespace CellularAutomata
             cells = newCells;
         }
 
-        private List<int> getNeighboursMoorePeriodic(int i,int j)
+        private List<int> getNeighboursMoorePeriodic(int i, int j)
         {
             List<int> neighbours = new List<int>(8);
 
-            if(i==0 && j!=0 && j!=jbound)
+            if (i == 0 && j != 0 && j != jbound)
             {
-                
+
                 neighbours.Add(cells[ibound, j]);
-                neighbours.Add(cells[ibound, j-1]);
-                neighbours.Add(cells[i, j-1]);
-                neighbours.Add(cells[i+1, j-1]);
-                neighbours.Add(cells[i+1, j]);
-                neighbours.Add(cells[i+1, j + 1]);
+                neighbours.Add(cells[ibound, j - 1]);
+                neighbours.Add(cells[i, j - 1]);
+                neighbours.Add(cells[i + 1, j - 1]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i + 1, j + 1]);
                 neighbours.Add(cells[i, j + 1]);
-                neighbours.Add(cells[ibound, j+1]);
+                neighbours.Add(cells[ibound, j + 1]);
             }
-           else if(i==ibound && j != 0 && j != jbound)
+            else if (i == ibound && j != 0 && j != jbound)
             {
-                neighbours.Add(cells[i-1, j]);
-                neighbours.Add(cells[i-1, j-1]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i - 1, j - 1]);
                 neighbours.Add(cells[i, j - 1]);
                 neighbours.Add(cells[0, j - 1]);
-                neighbours.Add(cells[0, j ]);
+                neighbours.Add(cells[0, j]);
                 neighbours.Add(cells[0, j + 1]);
                 neighbours.Add(cells[i, j + 1]);
                 neighbours.Add(cells[i - 1, j + 1]);
 
             }
-          else  if(j==0 && i!=0 && i!=ibound)
+            else if (j == 0 && i != 0 && i != ibound)
             {
                 neighbours.Add(cells[i - 1, j]);
-                neighbours.Add(cells[i-1, jbound]);
+                neighbours.Add(cells[i - 1, jbound]);
                 neighbours.Add(cells[i, jbound]);
-                neighbours.Add(cells[i +1,jbound]);
-                neighbours.Add(cells[i +1, j ]);
-                neighbours.Add(cells[i +1, j + 1]);
+                neighbours.Add(cells[i + 1, jbound]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i + 1, j + 1]);
                 neighbours.Add(cells[i, j + 1]);
                 neighbours.Add(cells[i - 1, j + 1]);
             }
-           else if (j == jbound && i != 0 && i != ibound)
+            else if (j == jbound && i != 0 && i != ibound)
             {
                 neighbours.Add(cells[i - 1, j]);
                 neighbours.Add(cells[i - 1, j - 1]);
                 neighbours.Add(cells[i, j - 1]);
-                neighbours.Add(cells[i +1, j - 1]);
-                neighbours.Add(cells[i +1, j ]);
-                neighbours.Add(cells[i+1, 0]);
-                neighbours.Add(cells[i , 0]);
+                neighbours.Add(cells[i + 1, j - 1]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i + 1, 0]);
+                neighbours.Add(cells[i, 0]);
                 neighbours.Add(cells[i - 1, 0]);
             }
-           else if(i == 0 && j==0)
+            else if (i == 0 && j == 0)
             {
-                neighbours.Add(cells[ibound, j ]);
+                neighbours.Add(cells[ibound, j]);
                 neighbours.Add(cells[ibound, jbound]);
-                neighbours.Add(cells[i , jbound]);
-                neighbours.Add(cells[i +1, jbound]);
-                neighbours.Add(cells[i +1, j ]);
+                neighbours.Add(cells[i, jbound]);
+                neighbours.Add(cells[i + 1, jbound]);
+                neighbours.Add(cells[i + 1, j]);
                 neighbours.Add(cells[i + 1, j + 1]);
-                neighbours.Add(cells[i , j + 1]);
-                neighbours.Add(cells[ibound, j+1]);
+                neighbours.Add(cells[i, j + 1]);
+                neighbours.Add(cells[ibound, j + 1]);
 
             }
-           else if(i == ibound && j==0)
+            else if (i == ibound && j == 0)
             {
-                neighbours.Add(cells[i-1, j]);
-                neighbours.Add(cells[i-1, jbound]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i - 1, jbound]);
                 neighbours.Add(cells[i, jbound]);
                 neighbours.Add(cells[0, jbound]);
                 neighbours.Add(cells[0, j]);
-                neighbours.Add(cells[0, j+1]);
-                neighbours.Add(cells[i, j+1]);
-                neighbours.Add(cells[i-1, j+1]);
+                neighbours.Add(cells[0, j + 1]);
+                neighbours.Add(cells[i, j + 1]);
+                neighbours.Add(cells[i - 1, j + 1]);
             }
-           else if(i==ibound && j==jbound)
+            else if (i == ibound && j == jbound)
             {
                 neighbours.Add(cells[i - 1, j]);
                 neighbours.Add(cells[i - 1, j - 1]);
@@ -356,38 +356,38 @@ namespace CellularAutomata
                 neighbours.Add(cells[0, j]);
                 neighbours.Add(cells[0, 0]);
                 neighbours.Add(cells[i, 0]);
-                neighbours.Add(cells[i-1, 0]);
+                neighbours.Add(cells[i - 1, 0]);
 
             }
-           else if(i==0 && j==jbound)
+            else if (i == 0 && j == jbound)
             {
                 neighbours.Add(cells[ibound, j]);
-                neighbours.Add(cells[ibound, j-1]);
-                neighbours.Add(cells[i, j-1]);
-                neighbours.Add(cells[i+1, j-1]);
-                neighbours.Add(cells[i+1, j]);
-                neighbours.Add(cells[i+1, 0]);
+                neighbours.Add(cells[ibound, j - 1]);
+                neighbours.Add(cells[i, j - 1]);
+                neighbours.Add(cells[i + 1, j - 1]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i + 1, 0]);
                 neighbours.Add(cells[i, 0]);
                 neighbours.Add(cells[ibound, 0]);
 
             }
             else
             {
-                neighbours.Add(cells[i-1, j]);
-                neighbours.Add(cells[i-1, j-1]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i - 1, j - 1]);
                 neighbours.Add(cells[i, j - 1]);
-                neighbours.Add(cells[i+1, j-1]);
-                neighbours.Add(cells[i+1, j]);
-                neighbours.Add(cells[i+1, j + 1]);
+                neighbours.Add(cells[i + 1, j - 1]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i + 1, j + 1]);
                 neighbours.Add(cells[i, j + 1]);
-                neighbours.Add(cells[i-1, j+1 ]);
-                
+                neighbours.Add(cells[i - 1, j + 1]);
+
             }
 
 
             return neighbours;
         }
-           
+
         private List<int> getNeigboursVonNoymanPeriodic(int i, int j)
         {
             List<int> neighbours = new List<int>(4);
@@ -462,54 +462,54 @@ namespace CellularAutomata
         {
             List<int> neighbours = new List<int>();
 
-            if( i== 0 && j != 0 && j != jbound)
+            if (i == 0 && j != 0 && j != jbound)
             {
                 neighbours.Add(cells[i, j - 1]);
                 neighbours.Add(cells[i, j + 1]);
                 neighbours.Add(cells[i + 1, j]);
             }
-            else if( i == ibound && j!=0 && j!=jbound)
+            else if (i == ibound && j != 0 && j != jbound)
             {
                 neighbours.Add(cells[i, j - 1]);
                 neighbours.Add(cells[i, j + 1]);
-                neighbours.Add(cells[i-1, j ]);
+                neighbours.Add(cells[i - 1, j]);
             }
-            else if (j == 0 && i!= 0 && i!=ibound)
+            else if (j == 0 && i != 0 && i != ibound)
             {
-                neighbours.Add(cells[i-1, j]);
-                neighbours.Add(cells[i+1, j ]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i + 1, j]);
                 neighbours.Add(cells[i, j + 1]);
             }
-            else if(j==jbound && i!=0 && i!=ibound)
+            else if (j == jbound && i != 0 && i != ibound)
             {
-                neighbours.Add(cells[i-1, j]);
-                neighbours.Add(cells[i+1, j]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i + 1, j]);
                 neighbours.Add(cells[i, j - 1]);
             }
-            else if(i==0 && j==0)
+            else if (i == 0 && j == 0)
             {
-                neighbours.Add(cells[i+1,j]);
+                neighbours.Add(cells[i + 1, j]);
                 neighbours.Add(cells[i, j + 1]);
             }
-            else if(i==0 && j==jbound)
+            else if (i == 0 && j == jbound)
             {
                 neighbours.Add(cells[i, j - 1]);
-                neighbours.Add(cells[i+1, j]);
+                neighbours.Add(cells[i + 1, j]);
             }
-            else if(i==ibound && j==0)
+            else if (i == ibound && j == 0)
             {
-                neighbours.Add(cells[i-1, j]);
+                neighbours.Add(cells[i - 1, j]);
                 neighbours.Add(cells[i, j + 1]);
             }
-            else if(i==ibound && j==jbound)
+            else if (i == ibound && j == jbound)
             {
-                neighbours.Add(cells[i-1, j]);
+                neighbours.Add(cells[i - 1, j]);
                 neighbours.Add(cells[i, j - 1]);
             }
             else
             {
-                neighbours.Add(cells[i+1, j]);
-                neighbours.Add(cells[i-1, j]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i - 1, j]);
                 neighbours.Add(cells[i, j - 1]);
                 neighbours.Add(cells[i, j + 1]);
             }
@@ -525,77 +525,77 @@ namespace CellularAutomata
             {
                 neighbours.Add(cells[i, j - 1]);
                 for (int k = j - 1; k <= j + 1; k++)
-                    neighbours.Add(cells[i + 1, k]);             
+                    neighbours.Add(cells[i + 1, k]);
                 neighbours.Add(cells[i, j + 1]);
             }
             else if (i == ibound && j != 0 && j != jbound)
             {
-                
-               
+
+
                 neighbours.Add(cells[i - 1, j]);
-                neighbours.Add(cells[i-1, j - 1]);
+                neighbours.Add(cells[i - 1, j - 1]);
                 neighbours.Add(cells[i, j - 1]);
                 neighbours.Add(cells[i, j + 1]);
-                neighbours.Add(cells[i-1, j + 1]);
+                neighbours.Add(cells[i - 1, j + 1]);
 
             }
             else if (j == 0 && i != 0 && i != ibound)
             {
 
-                neighbours.Add(cells[i-1, j ]);
-                neighbours.Add(cells[i+1, j]);
-                neighbours.Add(cells[i-1, j + 1]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i + 1, j]);
+                neighbours.Add(cells[i - 1, j + 1]);
                 neighbours.Add(cells[i, j + 1]);
-                neighbours.Add(cells[i+1, j + 1]);
+                neighbours.Add(cells[i + 1, j + 1]);
             }
             else if (j == jbound && i != 0 && i != ibound)
             {
 
-                neighbours.Add(cells[i-1, j ]);
-                neighbours.Add(cells[i-1, j - 1]);
-                neighbours.Add(cells[i, j ]);
+                neighbours.Add(cells[i - 1, j]);
+                neighbours.Add(cells[i - 1, j - 1]);
+                neighbours.Add(cells[i, j]);
                 neighbours.Add(cells[i + 1, j - 1]);
-                neighbours.Add(cells[i+1, j]);
+                neighbours.Add(cells[i + 1, j]);
             }
             else if (i == 0 && j == 0)
             {
-                neighbours.Add(cells[i+1, j]);
+                neighbours.Add(cells[i + 1, j]);
                 neighbours.Add(cells[i + 1, j + 1]);
-                neighbours.Add(cells[i, j+1]);
-               
+                neighbours.Add(cells[i, j + 1]);
+
 
             }
             else if (i == ibound && j == 0)
             {
                 neighbours.Add(cells[i - 1, j]);
-                neighbours.Add(cells[i, j+1]);
-                neighbours.Add(cells[i-1, j + 1]);
-               
+                neighbours.Add(cells[i, j + 1]);
+                neighbours.Add(cells[i - 1, j + 1]);
+
             }
             else if (i == ibound && j == jbound)
             {
-                neighbours.Add(cells[i-1, j]);
+                neighbours.Add(cells[i - 1, j]);
                 neighbours.Add(cells[i - 1, j - 1]);
-                neighbours.Add(cells[i , j-1]);
-               
+                neighbours.Add(cells[i, j - 1]);
+
             }
             else if (i == 0 && j == jbound)
             {
                 neighbours.Add(cells[i, j - 1]);
                 neighbours.Add(cells[i + 1, j - 1]);
                 neighbours.Add(cells[i + 1, j]);
-               
+
 
             }
             else
             {
                 neighbours.Add(cells[i - 1, j]);
-                neighbours.Add(cells[i - 1, j-1]);
-                neighbours.Add(cells[i , j - 1]);
-                neighbours.Add(cells[i+1, j - 1]);
-                neighbours.Add(cells[i+1, j ]);
+                neighbours.Add(cells[i - 1, j - 1]);
+                neighbours.Add(cells[i, j - 1]);
+                neighbours.Add(cells[i + 1, j - 1]);
+                neighbours.Add(cells[i + 1, j]);
                 neighbours.Add(cells[i + 1, j + 1]);
-                neighbours.Add(cells[i, j+1]);
+                neighbours.Add(cells[i, j + 1]);
                 neighbours.Add(cells[i - 1, j + 1]);
             }
 
@@ -604,10 +604,10 @@ namespace CellularAutomata
 
         private List<int> getNeighboursRandomPentagonal(int i, int j)
         {
-            
+
 
             List<int> neighbours = getNeighboursMoore(i, j);
-           
+
 
 
             if (i == 0 && j != 0 && j != jbound)
@@ -617,12 +617,12 @@ namespace CellularAutomata
                     case 0: // left Pentagon
 
                         neighbours.RemoveAt(4);
-                        neighbours.RemoveAt(3);                       
+                        neighbours.RemoveAt(3);
                         break;
                     case 1: // right Pentagon
                         neighbours.RemoveAt(1);
                         neighbours.RemoveAt(0);
-                        
+
                         break;
                     case 2: // top Pentagon
                         neighbours.RemoveAt(3);
@@ -643,14 +643,14 @@ namespace CellularAutomata
 
                         neighbours.RemoveAt(4);
                         neighbours.RemoveAt(3);
-                       
+
                         break;
                     case 1: // prawy
                         neighbours.RemoveAt(2);
-                        neighbours.RemoveAt(1);                      
+                        neighbours.RemoveAt(1);
                         break;
                     case 2: //gorny
-                       
+
                         break;
                     case 3: //dolny
                         neighbours.RemoveAt(4);
@@ -672,17 +672,17 @@ namespace CellularAutomata
                         neighbours.RemoveAt(2);
                         break;
                     case 1: // prawy
-                        
+
                         break;
                     case 2: //gorny
                         neighbours.RemoveAt(2);
                         neighbours.RemoveAt(1);
-                        
+
                         break;
                     case 3: //dolny
                         neighbours.RemoveAt(4);
                         neighbours.RemoveAt(0);
-                        
+
                         break;
                 }
             }
@@ -693,7 +693,7 @@ namespace CellularAutomata
                 {
                     case 0: // lewy
 
-                       
+
                         break;
                     case 1: // prawy
                         neighbours.RemoveAt(3);
@@ -703,12 +703,12 @@ namespace CellularAutomata
                     case 2: //gorny
                         neighbours.RemoveAt(4);
                         neighbours.RemoveAt(3);
-                       
+
                         break;
                     case 3: //dolny
                         neighbours.RemoveAt(1);
                         neighbours.RemoveAt(0);
-                        
+
                         break;
                 }
             }
@@ -720,17 +720,17 @@ namespace CellularAutomata
 
                         neighbours.RemoveAt(2);
                         neighbours.RemoveAt(1);
-                       
+
                         break;
                     case 1: // prawy
-                        
+
                         break;
                     case 2: //gorny
                         neighbours.RemoveAt(1);
-                        neighbours.RemoveAt(0);                      
+                        neighbours.RemoveAt(0);
                         break;
                     case 3: //dolny
-                        
+
                         break;
                 }
 
@@ -744,18 +744,18 @@ namespace CellularAutomata
 
                         neighbours.RemoveAt(2);
                         neighbours.RemoveAt(1);
-                        
+
                         break;
                     case 1: // prawy
-                       
+
                         break;
                     case 2: //gorny
-                        
+
                         break;
                     case 3: //dolny
                         neighbours.RemoveAt(2);
                         neighbours.RemoveAt(0);
-                        
+
                         break;
                 }
 
@@ -766,20 +766,20 @@ namespace CellularAutomata
                 {
                     case 0: // lewy
 
-                        
+
                         break;
                     case 1: // prawy
                         neighbours.RemoveAt(2);
                         neighbours.RemoveAt(1);
-                       
+
                         break;
                     case 2: //gorny
-                       
+
                         break;
                     case 3: //dolny
                         neighbours.RemoveAt(1);
                         neighbours.RemoveAt(0);
-                       
+
                         break;
                 }
 
@@ -790,20 +790,20 @@ namespace CellularAutomata
                 {
                     case 0: // lewy
 
-                       
+
                         break;
                     case 1: // prawy
                         neighbours.RemoveAt(1);
                         neighbours.RemoveAt(0);
-                       
+
                         break;
                     case 2: //gorny
                         neighbours.RemoveAt(2);
                         neighbours.RemoveAt(1);
-                       
+
                         break;
                     case 3: //dolny
-                       
+
                         break;
                 }
 
@@ -836,13 +836,13 @@ namespace CellularAutomata
                         break;
                 }
             }
-            
+
             return neighbours;
         }
-        
+
         private List<int> getNeighboursRandomPentagonalPeriodic(int i, int j)
         {
-           
+
 
             List<int> neighbours = new List<int>();
             neighbours = getNeighboursMoorePeriodic(i, j);
@@ -873,12 +873,12 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeighboursRandomHexagonal(int i,int j)
+        private List<int> getNeighboursRandomHexagonal(int i, int j)
         {
-            
+
 
             List<int> neighbours = neighbours = getNeighboursMoore(i, j);
-            
+
             if (i == 0 && j != 0 && j != jbound)
             {
                 switch (random.Next(0, 2))
@@ -886,11 +886,11 @@ namespace CellularAutomata
                     case 0: // top to bottom Hexagon
 
                         neighbours.RemoveAt(1);
-                       
+
                         break;
                     case 1: // bottom to top Hexagon
                         neighbours.RemoveAt(3);
-                       
+
                         break;
 
                 }
@@ -904,11 +904,11 @@ namespace CellularAutomata
                     case 0: // z gory do dolu
 
                         neighbours.RemoveAt(4);
-                       
+
                         break;
                     case 1: // z dolu do gory
                         neighbours.RemoveAt(1);
-                        
+
                         break;
 
                 }
@@ -954,7 +954,7 @@ namespace CellularAutomata
                 {
                     case 0: // z gory do dolu
 
-                       
+
 
                         break;
                     case 1: // z dolu do gory
@@ -976,7 +976,7 @@ namespace CellularAutomata
 
                         break;
                     case 1: // z dolu do gory
-                        
+
 
                         break;
 
@@ -989,7 +989,7 @@ namespace CellularAutomata
                 {
                     case 0: // z gory do dolu
 
-                        
+
 
                         break;
                     case 1: // z dolu do gory
@@ -1010,7 +1010,7 @@ namespace CellularAutomata
 
                         break;
                     case 1: // z dolu do gory
-                        
+
 
                         break;
 
@@ -1041,10 +1041,10 @@ namespace CellularAutomata
 
         private List<int> getNeighboursRandomHexagonalPeriodic(int i, int j)
         {
-           
+
 
             List<int> neighbours = getNeighboursMoorePeriodic(i, j);
-            
+
             switch (random.Next(0, 2))
             {
                 case 0: // top to bottom Hexagon
