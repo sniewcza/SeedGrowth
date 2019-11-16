@@ -1,6 +1,6 @@
 ﻿namespace SeedGrowth
 {
-    partial class Form2
+    partial class SimulationView
     {
         /// <summary>
         /// Required designer variable.
