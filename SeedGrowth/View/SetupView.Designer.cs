@@ -55,10 +55,16 @@
             this.button4 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.actionsGroupBox = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.inclusionNumberInputBox = new System.Windows.Forms.MaskedTextBox();
+            this.inclusionRadiusInputBox = new System.Windows.Forms.MaskedTextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.actionsGroupBox.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // startButton
@@ -322,6 +328,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.button4);
             this.groupBox3.Controls.Add(this.widthInputBox);
@@ -339,7 +346,7 @@
             this.groupBox3.Controls.Add(this.seedAmountInputBox);
             this.groupBox3.Location = new System.Drawing.Point(12, 15);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(514, 408);
+            this.groupBox3.Size = new System.Drawing.Size(655, 408);
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setup";
@@ -358,12 +365,61 @@
             this.actionsGroupBox.TabStop = false;
             this.actionsGroupBox.Text = "Actions";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label11);
+            this.groupBox4.Controls.Add(this.label10);
+            this.groupBox4.Controls.Add(this.inclusionRadiusInputBox);
+            this.groupBox4.Controls.Add(this.inclusionNumberInputBox);
+            this.groupBox4.Location = new System.Drawing.Point(347, 116);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(302, 100);
+            this.groupBox4.TabIndex = 29;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Inclusions";
+            // 
+            // inclusionNumberInputBox
+            // 
+            this.inclusionNumberInputBox.Location = new System.Drawing.Point(79, 32);
+            this.inclusionNumberInputBox.Mask = "00000";
+            this.inclusionNumberInputBox.Name = "inclusionNumberInputBox";
+            this.inclusionNumberInputBox.Size = new System.Drawing.Size(100, 22);
+            this.inclusionNumberInputBox.TabIndex = 0;
+            this.inclusionNumberInputBox.ValidatingType = typeof(int);
+            // 
+            // inclusionRadiusInputBox
+            // 
+            this.inclusionRadiusInputBox.Location = new System.Drawing.Point(79, 63);
+            this.inclusionRadiusInputBox.Mask = "00000";
+            this.inclusionRadiusInputBox.Name = "inclusionRadiusInputBox";
+            this.inclusionRadiusInputBox.Size = new System.Drawing.Size(100, 22);
+            this.inclusionRadiusInputBox.TabIndex = 1;
+            this.inclusionRadiusInputBox.ValidatingType = typeof(int);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(18, 32);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(55, 17);
+            this.label10.TabIndex = 2;
+            this.label10.Text = "amount";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(18, 66);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(47, 17);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "radius";
+            // 
             // SetupView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(538, 522);
+            this.ClientSize = new System.Drawing.Size(679, 619);
             this.Controls.Add(this.actionsGroupBox);
             this.Controls.Add(this.groupBox3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -378,6 +434,8 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.actionsGroupBox.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -410,6 +468,11 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox actionsGroupBox;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.MaskedTextBox inclusionRadiusInputBox;
+        private System.Windows.Forms.MaskedTextBox inclusionNumberInputBox;
     }
 }
 

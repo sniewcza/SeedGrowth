@@ -44,11 +44,67 @@ namespace SeedGrowth
         }
         public void setSeed(int x, int y)
         {
-            Color color = Color.FromArgb(255, random.Next(0, 256), random.Next(0, 256), random.Next(0, 256));
+            Color color = Color.FromArgb(255, random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
             colors.Add(color);
             Cells[x, y] = colors[colors.Count - 1].ToArgb();
         }
 
+        public void setInclusions(int numberOfInclusions, int radius)
+        {
+            for (int i = 0; i < numberOfInclusions; i++)
+            {
+                int x = random.Next(radius, Ibound - radius);
+                int y = random.Next(radius, Jbound - radius);
+                if (enoughSpaceForInclusion(x, y, radius))
+                {
+                    setInclusion(x, y, radius);
+                }
+
+            }
+        }
+
+
+        private void setInclusion(int x, int y, int radius)
+        {
+            int argbWhite = Color.White.ToArgb();
+            Cells[x, y] = argbWhite;
+            createCircularInclusion(x, y, radius, Color.White);
+        }
+
+        private void createCircularInclusion(int x, int y, int radius, Color color)
+        {
+            for (int i = -radius; i < radius; i++)
+            {
+                for (int j = -radius; j < radius; j++)
+                {
+                    if (isInRangeRadius(i,j,radius))
+                    {
+                        Cells[i+x, j+y] = Color.White.ToArgb();
+                    }
+                    
+                }
+            }
+        }
+
+        private bool isInRangeRadius(int x, int y, int radius)
+        {
+            return (x * x + y * y) <= radius * radius;
+        }
+        private bool enoughSpaceForInclusion(int x, int y, int radius)
+        {
+            int blackAGB = Color.Black.ToArgb();
+            for (int i = x - radius; i < x + radius; i++)
+            {
+                for (int j = y - radius; j < y + radius; j++)
+                {
+                    if (Cells[i, j] != blackAGB)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         public void setSeedsEvenly(int XaxisSeeds, int YaxisSeeds)
         {
             int dx = Convert.ToInt32(Math.Round(Ibound / (double)(XaxisSeeds + 1)));
