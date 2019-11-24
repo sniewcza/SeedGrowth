@@ -49,6 +49,7 @@
     <Compile Include="Model\CellularAutomata2D.cs" />
     <Compile Include="Controllers\SeedGrowthController.cs" />
     <Compile Include="Model\Seed.cs" />
+    <Compile Include="Model\SeedGrowthDo.cs" />
     <Compile Include="Utils\SeedGrowthConverter.cs" />
     <Compile Include="View\SetupView.cs">
       <SubType>Form</SubType>

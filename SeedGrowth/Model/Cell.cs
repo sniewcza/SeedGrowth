@@ -11,7 +11,7 @@ namespace SeedGrowth
         alive,
         dead
     }
-
+    [Serializable]
     public class Cell
     {
         private int _xCordinate;

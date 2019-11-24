@@ -3,6 +3,10 @@ using SeedGrowth.Utils;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Forms;
 
 namespace SeedGrowth.Controllers
 {
@@ -156,6 +160,26 @@ namespace SeedGrowth.Controllers
         public void performNextStep()
         {
             _seedGrowth.PerformIterationStep();
+        }
+
+        public void exportSeedGrowthData()
+        {
+            string filePath = _view.getFilePath();
+            if (filePath != null)
+            {
+                IFormatter formatter = new BinaryFormatter();
+                try
+                {
+                    var dataObject = _seedGrowth.getSerialziableData();
+                    Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    formatter.Serialize(stream, dataObject);
+                    stream.Close();
+                }
+                catch (Exception ex)
+                {
+                    _view.showExceptionMessage(ex.Message);
+                }
+            }
         }
     }
 }

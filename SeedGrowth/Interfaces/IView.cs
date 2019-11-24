@@ -8,5 +8,6 @@ namespace SeedGrowth.Interfaces
         void setController(SeedGrowthController controller);
         void setBitmap(Bitmap bitmap);
         void showExceptionMessage(string message);
+        string getFilePath();
     }
 }

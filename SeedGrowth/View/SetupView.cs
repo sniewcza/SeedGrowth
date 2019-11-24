@@ -91,16 +91,7 @@ namespace SeedGrowth
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                AddExtension = true,
-                DefaultExt = ".bmp"
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                simulationDisplayer?.pictureBox.Image.Save(saveFileDialog.FileName, ImageFormat.Bmp);
-            }
+            _controller.exportSeedGrowthData();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -182,6 +173,20 @@ namespace SeedGrowth
         public void showExceptionMessage(string message)
         {
             MessageBox.Show(message);
+        }
+
+        public string getFilePath()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                return saveFileDialog.FileName;
+            }
+            return null;
         }
     }
 }

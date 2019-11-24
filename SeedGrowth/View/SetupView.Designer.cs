@@ -42,7 +42,7 @@
             this.SDcomboBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.saveButton = new System.Windows.Forms.Button();
+            this.exportDataButton = new System.Windows.Forms.Button();
             this.xAxisSeedsInputBox = new System.Windows.Forms.MaskedTextBox();
             this.yAxisSeedsInputBox = new System.Windows.Forms.MaskedTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -62,7 +62,7 @@
             this.inclusionMinRadiusInputBox = new System.Windows.Forms.MaskedTextBox();
             this.inclusionNumberInputBox = new System.Windows.Forms.MaskedTextBox();
             this.actionsGroupBox = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.importDataButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -210,16 +210,16 @@
             this.label7.TabIndex = 21;
             this.label7.Text = "Seeds amount";
             // 
-            // saveButton
+            // exportDataButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(328, 32);
-            this.saveButton.Margin = new System.Windows.Forms.Padding(4);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(100, 28);
-            this.saveButton.TabIndex = 22;
-            this.saveButton.Text = "Save BMP";
-            this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.button2_Click);
+            this.exportDataButton.Location = new System.Drawing.Point(328, 32);
+            this.exportDataButton.Margin = new System.Windows.Forms.Padding(4);
+            this.exportDataButton.Name = "exportDataButton";
+            this.exportDataButton.Size = new System.Drawing.Size(100, 28);
+            this.exportDataButton.TabIndex = 22;
+            this.exportDataButton.Text = "Export to file";
+            this.exportDataButton.UseVisualStyleBackColor = true;
+            this.exportDataButton.Click += new System.EventHandler(this.button2_Click);
             // 
             // xAxisSeedsInputBox
             // 
@@ -372,7 +372,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(18, 105);
+            this.label12.Location = new System.Drawing.Point(15, 102);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(76, 17);
             this.label12.TabIndex = 5;
@@ -425,27 +425,27 @@
             // 
             // actionsGroupBox
             // 
-            this.actionsGroupBox.Controls.Add(this.button1);
+            this.actionsGroupBox.Controls.Add(this.importDataButton);
             this.actionsGroupBox.Controls.Add(this.stopButton);
             this.actionsGroupBox.Controls.Add(this.startButton);
-            this.actionsGroupBox.Controls.Add(this.saveButton);
+            this.actionsGroupBox.Controls.Add(this.exportDataButton);
             this.actionsGroupBox.Controls.Add(this.nextStepButton);
             this.actionsGroupBox.Enabled = false;
             this.actionsGroupBox.Location = new System.Drawing.Point(13, 429);
             this.actionsGroupBox.Name = "actionsGroupBox";
-            this.actionsGroupBox.Size = new System.Drawing.Size(569, 84);
+            this.actionsGroupBox.Size = new System.Drawing.Size(648, 84);
             this.actionsGroupBox.TabIndex = 30;
             this.actionsGroupBox.TabStop = false;
             this.actionsGroupBox.Text = "Actions";
             // 
-            // button1
+            // importDataButton
             // 
-            this.button1.Location = new System.Drawing.Point(435, 32);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 28);
-            this.button1.TabIndex = 28;
-            this.button1.Text = "Load MBP";
-            this.button1.UseVisualStyleBackColor = true;
+            this.importDataButton.Location = new System.Drawing.Point(435, 32);
+            this.importDataButton.Name = "importDataButton";
+            this.importDataButton.Size = new System.Drawing.Size(136, 28);
+            this.importDataButton.TabIndex = 28;
+            this.importDataButton.Text = "Import from file";
+            this.importDataButton.UseVisualStyleBackColor = true;
             // 
             // SetupView
             // 
@@ -488,7 +488,7 @@
         private System.Windows.Forms.ComboBox SDcomboBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button exportDataButton;
         private System.Windows.Forms.MaskedTextBox xAxisSeedsInputBox;
         private System.Windows.Forms.MaskedTextBox yAxisSeedsInputBox;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -508,7 +508,7 @@
         private System.Windows.Forms.MaskedTextBox inclusionNumberInputBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.MaskedTextBox inclusionMaxRadiusInputBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button importDataButton;
     }
 }
 

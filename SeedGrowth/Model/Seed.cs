@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeedGrowth
 {
+    [Serializable]
     class Seed : Cell
     {
         private Guid _grainId;
