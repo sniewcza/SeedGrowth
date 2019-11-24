@@ -55,13 +55,14 @@
             this.button4 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.inclusionMaxRadiusInputBox = new System.Windows.Forms.MaskedTextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.inclusionMinRadiusInputBox = new System.Windows.Forms.MaskedTextBox();
             this.inclusionNumberInputBox = new System.Windows.Forms.MaskedTextBox();
             this.actionsGroupBox = new System.Windows.Forms.GroupBox();
-            this.inclusionMaxRadiusInputBox = new System.Windows.Forms.MaskedTextBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -368,6 +369,24 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Inclusions";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(18, 105);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 17);
+            this.label12.TabIndex = 5;
+            this.label12.Text = "max radius";
+            // 
+            // inclusionMaxRadiusInputBox
+            // 
+            this.inclusionMaxRadiusInputBox.Location = new System.Drawing.Point(97, 102);
+            this.inclusionMaxRadiusInputBox.Mask = "00000";
+            this.inclusionMaxRadiusInputBox.Name = "inclusionMaxRadiusInputBox";
+            this.inclusionMaxRadiusInputBox.Size = new System.Drawing.Size(100, 22);
+            this.inclusionMaxRadiusInputBox.TabIndex = 4;
+            this.inclusionMaxRadiusInputBox.ValidatingType = typeof(int);
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -406,6 +425,7 @@
             // 
             // actionsGroupBox
             // 
+            this.actionsGroupBox.Controls.Add(this.button1);
             this.actionsGroupBox.Controls.Add(this.stopButton);
             this.actionsGroupBox.Controls.Add(this.startButton);
             this.actionsGroupBox.Controls.Add(this.saveButton);
@@ -413,28 +433,19 @@
             this.actionsGroupBox.Enabled = false;
             this.actionsGroupBox.Location = new System.Drawing.Point(13, 429);
             this.actionsGroupBox.Name = "actionsGroupBox";
-            this.actionsGroupBox.Size = new System.Drawing.Size(514, 84);
+            this.actionsGroupBox.Size = new System.Drawing.Size(569, 84);
             this.actionsGroupBox.TabIndex = 30;
             this.actionsGroupBox.TabStop = false;
             this.actionsGroupBox.Text = "Actions";
             // 
-            // inclusionMaxRadiusInputBox
+            // button1
             // 
-            this.inclusionMaxRadiusInputBox.Location = new System.Drawing.Point(97, 102);
-            this.inclusionMaxRadiusInputBox.Mask = "00000";
-            this.inclusionMaxRadiusInputBox.Name = "inclusionMaxRadiusInputBox";
-            this.inclusionMaxRadiusInputBox.Size = new System.Drawing.Size(100, 22);
-            this.inclusionMaxRadiusInputBox.TabIndex = 4;
-            this.inclusionMaxRadiusInputBox.ValidatingType = typeof(int);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(18, 105);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(76, 17);
-            this.label12.TabIndex = 5;
-            this.label12.Text = "max radius";
+            this.button1.Location = new System.Drawing.Point(435, 32);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(100, 28);
+            this.button1.TabIndex = 28;
+            this.button1.Text = "Load MBP";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // SetupView
             // 
@@ -497,6 +508,7 @@
         private System.Windows.Forms.MaskedTextBox inclusionNumberInputBox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.MaskedTextBox inclusionMaxRadiusInputBox;
+        private System.Windows.Forms.Button button1;
     }
 }
 

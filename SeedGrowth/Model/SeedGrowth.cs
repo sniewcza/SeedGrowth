@@ -9,14 +9,11 @@ namespace SeedGrowth
 {
     class SeedGrowth : CellularAutomata2D
     {
-        //private List<Color> colors = new List<Color>() { Color.FromKnownColor(KnownColor.Coral) };
         public event EventHandler<Color[,]> onGrainChange;
         Random random = new Random(DateTime.Now.Millisecond);
         private Seed[,] seeds;
         private Guid inclusionId = Guid.NewGuid();
         private Dictionary<Guid, Color> grainMap = new Dictionary<Guid, Color>();
-
-
 
         public SeedGrowth(int N, int M) : base(N, M)
         {
@@ -25,10 +22,8 @@ namespace SeedGrowth
             seeds = new Seed[N, M];
             for (int i = 0; i < N; i++)
                 for (int j = 0; j < M; j++)
-                {
                     seeds[i, j] = new Seed(i, j, CellState.dead);
-                    //colors[i, j] = Color.Black;
-                }
+
             this.OnIterationComplette += SeedGrowth_OnIterationComplette;
         }
 
@@ -40,8 +35,7 @@ namespace SeedGrowth
                 colors[cell.XCordinate, cell.YCordinate] = grainMap[seeds[cell.XCordinate, cell.YCordinate].GrainId];
             }
 
-
-            this.onGrainChange?.Invoke(this, colors);
+            onGrainChange?.Invoke(this, colors);
         }
 
         private List<Seed> toSeeds(List<Cell> cells)
@@ -68,7 +62,11 @@ namespace SeedGrowth
             if (Cells[i, j].State == CellState.dead && aliveNeighbours != 0)
             {
                 var neigbourSeeds = toSeeds(neighbours);
-                var grainsOnly = neigbourSeeds.Where(s => s.GrainId != Guid.Empty).Where(s => s.GrainId != inclusionId).GroupBy(s => s.GrainId);
+                var grainsOnly = neigbourSeeds
+                    .Where(s => s.GrainId != Guid.Empty)
+                    .Where(s => s.GrainId != inclusionId)
+                    .GroupBy(s => s.GrainId);
+
                 var orderedGrains = grainsOnly.OrderByDescending(g => g.Count());
                 if (orderedGrains.Count() > 0)
                 {
@@ -110,7 +108,6 @@ namespace SeedGrowth
 
         private void setInclusion(int x, int y, int radius)
         {
-            // int argbWhite = Color.White;
             Cells[x, y].State = CellState.alive;
             seeds[x, y].GrainId = inclusionId;
             createCircularInclusion(x, y, radius, Color.White);
@@ -127,7 +124,6 @@ namespace SeedGrowth
                         Cells[i + x, j + y].State = CellState.alive;
                         seeds[i + x, j + y].GrainId = inclusionId;
                     }
-
                 }
             }
         }
@@ -139,7 +135,6 @@ namespace SeedGrowth
 
         private bool enoughSpaceForInclusion(int x, int y, int radius)
         {
-            //int blackAGB = Color.Black.ToArgb();
             for (int i = x - radius; i < x + radius; i++)
             {
                 for (int j = y - radius; j < y + radius; j++)

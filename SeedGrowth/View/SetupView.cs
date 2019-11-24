@@ -91,9 +91,11 @@ namespace SeedGrowth
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.AddExtension = true;
-            saveFileDialog.DefaultExt = ".bmp";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+                DefaultExt = ".bmp"
+            };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {

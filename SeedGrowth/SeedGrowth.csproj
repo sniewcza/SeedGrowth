@@ -45,10 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cell.cs" />
-    <Compile Include="CellularAutomata2D.cs" />
+    <Compile Include="Model\Cell.cs" />
+    <Compile Include="Model\CellularAutomata2D.cs" />
     <Compile Include="Controllers\SeedGrowthController.cs" />
-    <Compile Include="Seed.cs" />
+    <Compile Include="Model\Seed.cs" />
     <Compile Include="Utils\SeedGrowthConverter.cs" />
     <Compile Include="View\SetupView.cs">
       <SubType>Form</SubType>
@@ -65,7 +65,7 @@
     <Compile Include="Interfaces\IView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeedGrowth.cs" />
+    <Compile Include="Model\SeedGrowth.cs" />
     <Compile Include="Utils\SeedGrowthFactory.cs" />
     <EmbeddedResource Include="View\SetupView.resx">
       <DependentUpon>SetupView.cs</DependentUpon>
