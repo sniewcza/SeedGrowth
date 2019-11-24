@@ -45,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cell.cs" />
     <Compile Include="CellularAutomata2D.cs" />
     <Compile Include="Controllers\SeedGrowthController.cs" />
+    <Compile Include="Seed.cs" />
     <Compile Include="Utils\SeedGrowthConverter.cs" />
     <Compile Include="View\SetupView.cs">
       <SubType>Form</SubType>

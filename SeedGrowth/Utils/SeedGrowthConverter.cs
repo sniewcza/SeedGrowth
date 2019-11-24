@@ -8,7 +8,7 @@ namespace SeedGrowth.Utils
 {
     class SeedGrowthConverter
     {
-        public static Bitmap ConvertToBitmap(int[,] seedGrowthState)
+        public static Bitmap ConvertToBitmap(Color[,] seedGrowthState)
         {
             int iBound = seedGrowthState.GetUpperBound(0);
             int jBound = seedGrowthState.GetUpperBound(1);
@@ -23,7 +23,7 @@ namespace SeedGrowth.Utils
                 for (int j = 0; j <= jBound; j++)
                 {
                     int offset = index * 4 + j * bitmapData.Stride;
-                    color = Color.FromArgb(seedGrowthState[index, j]);
+                    color = seedGrowthState[index, j];
                     Marshal.WriteByte(ptr, offset, color.R);
                     Marshal.WriteByte(ptr, offset + 1, color.G);
                     Marshal.WriteByte(ptr, offset + 2, color.B);

@@ -2,6 +2,7 @@
 using SeedGrowth.Utils;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace SeedGrowth.Controllers
 {
@@ -66,7 +67,7 @@ namespace SeedGrowth.Controllers
                 _seedGrowth.setInclusions(_numberOfInclusions, _inclusionRadius);
             }
             
-            _seedGrowth.OnIterationComplette += _seedGrowth_OnIterationComplette;
+            _seedGrowth.onGrainChange += _seedGrowth_OnIterationComplette;
             _seedGrowth.PerformIterationStep();
         }
 
@@ -116,7 +117,7 @@ namespace SeedGrowth.Controllers
             }
         }
 
-        private void _seedGrowth_OnIterationComplette(object sender, int[,] e)
+        private void _seedGrowth_OnIterationComplette(object sender, Color[,] e)
         {
             _view.setBitmap(SeedGrowthConverter.ConvertToBitmap(e));
         }
