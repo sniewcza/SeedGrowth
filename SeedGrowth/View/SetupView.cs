@@ -146,14 +146,15 @@ namespace SeedGrowth
             int yAxisSeeds = Convert.ToInt32(yAxisSeedsInputBox.Text == "" ? "3" : xAxisSeedsInputBox.Text);
             int radius = Convert.ToInt32(radiusInputBox.Text == "" ? "10" : radiusInputBox.Text);
             int numberOfInclusions = Convert.ToInt32(inclusionNumberInputBox.Text == "" ? "0" : inclusionNumberInputBox.Text);
-            int inclusionRadius = Convert.ToInt32(inclusionRadiusInputBox.Text == "" ? "0" : inclusionRadiusInputBox.Text);
+            int inclusionsMaxRadius = Convert.ToInt32(inclusionMaxRadiusInputBox.Text == "" ? "0" : inclusionMaxRadiusInputBox.Text);
+            int inclusionsMinRadius = Convert.ToInt32(inclusionMinRadiusInputBox.Text == "" ? "0" : inclusionMinRadiusInputBox.Text);
             var boundoryContidionType = Enum.Parse(typeof(BoundaryConditions), BCcomboBox.SelectedValue.ToString());
             var neighbourhoodType = Enum.Parse(typeof(Neighbourhood), NHcomboBox.SelectedValue.ToString());
 
             simulationDisplayer?.Dispose();
             simulationDisplayer = new SimulationView
             {
-                Size = new Size(width + 20, height + 45)
+                Size = new Size(width + 20, height + 20)
             };
             simulationDisplayer.pictureBox.Size = new Size(width, height);
             simulationDisplayer.Disposed += Form2_Disposed;
@@ -168,7 +169,8 @@ namespace SeedGrowth
             _controller.setXAxisSeeds(xAxisSeeds);
             _controller.setYAxisSeeds(yAxisSeeds);
             _controller.setInclusionsNumber(numberOfInclusions);
-            _controller.setInclusionRadius(inclusionRadius);
+            _controller.setInclusionMaxRadius(inclusionsMaxRadius);
+            _controller.setInclusionMinRadius(inclusionsMinRadius);
             _controller.initializeDomain();
 
             actionsGroupBox.Enabled = true;

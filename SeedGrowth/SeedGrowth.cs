@@ -93,15 +93,16 @@ namespace SeedGrowth
             seeds[x, y].GrainId = grainId;
         }
 
-        public void setInclusions(int numberOfInclusions, int radius)
+        public void setInclusions(int numberOfInclusions, int minRadius, int maxRadius)
         {
             for (int i = 0; i < numberOfInclusions; i++)
             {
-                int x = random.Next(radius, Ibound - radius);
-                int y = random.Next(radius, Jbound - radius);
-                if (enoughSpaceForInclusion(x, y, radius))
+                int r = random.Next(minRadius, maxRadius);
+                int x = random.Next(r, Ibound - r);
+                int y = random.Next(r, Jbound - r);
+                if (enoughSpaceForInclusion(x, y, r))
                 {
-                    setInclusion(x, y, radius);
+                    setInclusion(x, y, r);
                 }
             }
         }

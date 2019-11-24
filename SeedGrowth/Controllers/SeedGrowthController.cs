@@ -15,7 +15,8 @@ namespace SeedGrowth.Controllers
         private int _radius;
         private int _xAxisSeeds;
         private int _yAxisSeeds;
-        private int _inclusionRadius = 0;
+        private int _inclusionMaxRadius = 0;
+        private int _inclusionMinRadius = 0;
         private int _numberOfInclusions = 0;
         private SeedGrowth _seedGrowth;
         private SeedDraw _seedDraw;
@@ -52,7 +53,7 @@ namespace SeedGrowth.Controllers
                         break;
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 _view.showExceptionMessage(exception.Message);
             }
@@ -64,16 +65,21 @@ namespace SeedGrowth.Controllers
             setInitialSeeds();
             if (_numberOfInclusions != 0)
             {
-                _seedGrowth.setInclusions(_numberOfInclusions, _inclusionRadius);
+                _seedGrowth.setInclusions(_numberOfInclusions, _inclusionMinRadius, _inclusionMaxRadius);
             }
-            
+
             _seedGrowth.onGrainChange += _seedGrowth_OnIterationComplette;
             _seedGrowth.PerformIterationStep();
         }
 
-        public void setInclusionRadius(int radius)
+        public void setInclusionMaxRadius(int radius)
         {
-            _inclusionRadius = radius;
+            _inclusionMaxRadius = radius;
+        }
+
+        public void setInclusionMinRadius(int radius)
+        {
+            _inclusionMinRadius = radius;
         }
 
         public void setInclusionsNumber(int numberOfInclusions)
