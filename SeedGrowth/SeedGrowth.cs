@@ -9,46 +9,148 @@ namespace SeedGrowth
 {
     class SeedGrowth : CellularAutomata2D
     {
-        private List<Color> colors = new List<Color>() { Color.FromKnownColor(KnownColor.Coral) };
+        //private List<Color> colors = new List<Color>() { Color.FromKnownColor(KnownColor.Coral) };
+        public event EventHandler<Color[,]> onGrainChange;
         Random random = new Random(DateTime.Now.Millisecond);
+        private Seed[,] seeds;
+        private Guid inclusionId = Guid.NewGuid();
+        private Dictionary<Guid, Color> grainMap = new Dictionary<Guid, Color>();
+
+
 
         public SeedGrowth(int N, int M) : base(N, M)
         {
+            grainMap.Add(Guid.Empty, Color.Black);
+            grainMap.Add(inclusionId, Color.White);
+            seeds = new Seed[N, M];
             for (int i = 0; i < N; i++)
                 for (int j = 0; j < M; j++)
-                    Cells[i, j] = Color.Black.ToArgb();
+                {
+                    seeds[i, j] = new Seed(i, j, CellState.dead);
+                    //colors[i, j] = Color.Black;
+                }
+            this.OnIterationComplette += SeedGrowth_OnIterationComplette;
         }
 
-        public override int getCellstate(int i, int j)
+        private void SeedGrowth_OnIterationComplette(object sender, Cell[,] e)
         {
-
-            List<int> neighbours = getNeighboursState(i, j);
-            int aliveNeighbours = neighbours.Count(color => color != Color.Black.ToArgb());
-            if (Cells[i, j] == Color.Black.ToArgb() && aliveNeighbours != 0)
+            Color[,] colors = new Color[e.GetUpperBound(0) + 1, e.GetUpperBound(1) + 1];
+            foreach (var cell in e)
             {
-                int dominantColorcount = 0;
-                Color dominantColor = Color.FromArgb(Cells[i, j]);
-                for (int k = 0; k < colors.Count; k++)
+                colors[cell.XCordinate, cell.YCordinate] = grainMap[seeds[cell.XCordinate, cell.YCordinate].GrainId];
+            }
+
+
+            this.onGrainChange?.Invoke(this, colors);
+        }
+
+        private List<Seed> toSeeds(List<Cell> cells)
+        {
+            List<Seed> seeds = new List<Seed>();
+            foreach (var cell in cells)
+            {
+                seeds.Add(this.seeds[cell.XCordinate, cell.YCordinate]);
+            }
+
+            return seeds;
+        }
+
+
+        public override CellState getCellstate(int i, int j)
+        {
+            if (Cells[i, j].State == CellState.alive)
+            {
+                return CellState.alive;
+            }
+            List<Cell> neighbours = getNeighboursState(i, j);
+            int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
+
+            if (Cells[i, j].State == CellState.dead && aliveNeighbours != 0)
+            {
+                var neigbourSeeds = toSeeds(neighbours);
+                var grainsOnly = neigbourSeeds.Where(s => s.GrainId != Guid.Empty).Where(s => s.GrainId != inclusionId).GroupBy(s => s.GrainId);
+                var orderedGrains = grainsOnly.OrderByDescending(g => g.Count());
+                if (orderedGrains.Count() > 0)
                 {
-                    int colorcount = neighbours.Count(color => color == colors[k].ToArgb());
-                    if (dominantColorcount < colorcount)
-                    {
-                        dominantColor = colors[k];
-                        dominantColorcount = colorcount;
-                    }
+                    seeds[i, j].GrainId = orderedGrains.ElementAt(0).Key;
+                    return CellState.alive;
                 }
-                return dominantColor.ToArgb();
+                else
+                {
+                    return CellState.dead;
+                }
+
             }
             else
-                return Cells[i, j];
+                return CellState.dead;
         }
         public void setSeed(int x, int y)
         {
-            Color color = Color.FromArgb(255, random.Next(0, 256), random.Next(0, 256), random.Next(0, 256));
-            colors.Add(color);
-            Cells[x, y] = colors[colors.Count - 1].ToArgb();
+            Color color = Color.FromArgb(255, random.Next(1, 254), random.Next(1, 254), random.Next(1, 254));
+            var grainId = Guid.NewGuid();
+            grainMap.Add(grainId, color);
+            Cells[x, y].State = CellState.alive;
+            seeds[x, y].GrainId = grainId;
         }
 
+        public void setInclusions(int numberOfInclusions, int radius)
+        {
+            for (int i = 0; i < numberOfInclusions; i++)
+            {
+                int x = random.Next(radius, Ibound - radius);
+                int y = random.Next(radius, Jbound - radius);
+                if (enoughSpaceForInclusion(x, y, radius))
+                {
+                    setInclusion(x, y, radius);
+                }
+            }
+        }
+
+
+        private void setInclusion(int x, int y, int radius)
+        {
+            // int argbWhite = Color.White;
+            Cells[x, y].State = CellState.alive;
+            seeds[x, y].GrainId = inclusionId;
+            createCircularInclusion(x, y, radius, Color.White);
+        }
+
+        private void createCircularInclusion(int x, int y, int radius, Color color)
+        {
+            for (int i = -radius; i < radius; i++)
+            {
+                for (int j = -radius; j < radius; j++)
+                {
+                    if (isInRangeRadius(i, j, radius))
+                    {
+                        Cells[i + x, j + y].State = CellState.alive;
+                        seeds[i + x, j + y].GrainId = inclusionId;
+                    }
+
+                }
+            }
+        }
+
+        private bool isInRangeRadius(int x, int y, int radius)
+        {
+            return (x * x + y * y) <= radius * radius;
+        }
+
+        private bool enoughSpaceForInclusion(int x, int y, int radius)
+        {
+            //int blackAGB = Color.Black.ToArgb();
+            for (int i = x - radius; i < x + radius; i++)
+            {
+                for (int j = y - radius; j < y + radius; j++)
+                {
+                    if (Cells[i, j].State == CellState.alive)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         public void setSeedsEvenly(int XaxisSeeds, int YaxisSeeds)
         {
             int dx = Convert.ToInt32(Math.Round(Ibound / (double)(XaxisSeeds + 1)));
@@ -116,13 +218,13 @@ namespace SeedGrowth
                 setSeed(p.X, p.Y);
         }
 
-        private bool areFreeCells()
-        {
-            foreach (int c in Cells)
-                if (c == Color.Black.ToArgb())
-                    return true;
-            return false;
-        }
+        //private bool areFreeCells()
+        //{
+        //    foreach (int c in Cells)
+        //        if (c == Color.Black.ToArgb())
+        //            return true;
+        //    return false;
+        //}
 
         private double getSeedsDistance(Point p1, Point p2)
         {

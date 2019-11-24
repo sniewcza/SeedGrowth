@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeedGrowth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,13 +25,13 @@ namespace CellularAutomata
         PentagonalRandomPeriodic
     }
 
-    delegate List<int> getNeighbours(int i, int j);
+    delegate List<Cell> getNeighbours(int i, int j);
 
     class CellularAutomata2D
     {
-        public event EventHandler<int[,]> OnIterationComplette;
+        public event EventHandler<Cell[,]> OnIterationComplette;
 
-        private int[,] cells;
+        private Cell[,] cells;
         private readonly int ibound;
         private readonly int jbound;
         private volatile bool isWorking = false;
@@ -39,9 +40,14 @@ namespace CellularAutomata
 
         public CellularAutomata2D(int N, int M)
         {
-            cells = new int[N, M];
+            cells = new Cell[N, M];
             ibound = cells.GetUpperBound(0);
             jbound = cells.GetUpperBound(1);
+            for (int i = 0; i < ibound + 1; i++)
+                for (int j = 0; j < jbound + 1; j++)
+                    cells[i, j] = new Cell(i, j, CellState.dead);
+
+
         }
 
         public void setNeighbourhoodType(NeigbhourhoodType type)
@@ -62,35 +68,35 @@ namespace CellularAutomata
             switch (structure)
             {
                 case Structure.Immutable:
-                    cells[xmid, ymid] = 1;
-                    cells[xmid, ymid + 1] = 1;
-                    cells[xmid + 1, ymid - 1] = 1;
-                    cells[xmid + 1, ymid + 2] = 1;
-                    cells[xmid + 2, ymid] = 1;
-                    cells[xmid + 2, ymid + 1] = 1;
+                    cells[xmid, ymid].State = CellState.alive;
+                    cells[xmid, ymid + 1].State = CellState.alive;
+                    cells[xmid + 1, ymid - 1].State = CellState.alive;
+                    cells[xmid + 1, ymid + 2].State = CellState.alive;
+                    cells[xmid + 2, ymid].State = CellState.alive;
+                    cells[xmid + 2, ymid + 1].State = CellState.alive;
                     break;
                 case Structure.Oscilator:
-                    cells[xmid, ++ymid] = 1;
-                    cells[xmid, ++ymid] = 1;
-                    cells[xmid, ++ymid] = 1;
+                    cells[xmid, ++ymid].State = CellState.alive;
+                    cells[xmid, ++ymid].State = CellState.alive;
+                    cells[xmid, ++ymid].State = CellState.alive;
                     break;
                 case Structure.Glider:
-                    cells[xmid, ymid] = 1;
-                    cells[xmid + 1, ymid] = 1;
-                    cells[xmid + 2, ymid] = 1;
-                    cells[xmid, ymid + 1] = 1;
-                    cells[xmid + 1, ymid + 2] = 1;
+                    cells[xmid, ymid].State = CellState.alive;
+                    cells[xmid + 1, ymid].State = CellState.alive;
+                    cells[xmid + 2, ymid].State = CellState.alive;
+                    cells[xmid, ymid + 1].State = CellState.alive;
+                    cells[xmid + 1, ymid + 2].State = CellState.alive;
                     break;
                 case Structure.Dakota:
-                    cells[xmid, ymid] = 1;
-                    cells[xmid, ymid - 1] = 1;
-                    cells[xmid, ymid - 2] = 1;
-                    cells[xmid + 1, ymid] = 1;
-                    cells[xmid + 2, ymid] = 1;
-                    cells[xmid + 3, ymid] = 1;
-                    cells[xmid + 1, ymid - 3] = 1;
-                    cells[xmid + 4, ymid - 1] = 1;
-                    cells[xmid + 4, ymid - 3] = 1;
+                    cells[xmid, ymid].State = CellState.alive;
+                    cells[xmid, ymid - 1].State = CellState.alive;
+                    cells[xmid, ymid - 2].State = CellState.alive;
+                    cells[xmid + 1, ymid].State = CellState.alive;
+                    cells[xmid + 2, ymid].State = CellState.alive;
+                    cells[xmid + 3, ymid].State = CellState.alive;
+                    cells[xmid + 1, ymid - 3].State = CellState.alive;
+                    cells[xmid + 4, ymid - 1].State = CellState.alive;
+                    cells[xmid + 4, ymid - 3].State = CellState.alive;
                     break;
             }
         }
@@ -103,35 +109,35 @@ namespace CellularAutomata
             switch (structure)
             {
                 case Structure.Immutable:
-                    cells[xmid, ymid] = 1;
-                    cells[xmid, ymid + 1] = 1;
-                    cells[xmid + 1, ymid - 1] = 1;
-                    cells[xmid + 1, ymid + 2] = 1;
-                    cells[xmid + 2, ymid] = 1;
-                    cells[xmid + 2, ymid + 1] = 1;
+                    cells[xmid, ymid].State = CellState.alive;
+                    cells[xmid, ymid + 1].State = CellState.alive;
+                    cells[xmid + 1, ymid - 1].State = CellState.alive;
+                    cells[xmid + 1, ymid + 2].State = CellState.alive;
+                    cells[xmid + 2, ymid].State = CellState.alive;
+                    cells[xmid + 2, ymid + 1].State = CellState.alive;
                     break;
                 case Structure.Oscilator:
-                    cells[xmid, ++ymid] = 1;
-                    cells[xmid, ++ymid] = 1;
-                    cells[xmid, ++ymid] = 1;
+                    cells[xmid, ++ymid].State = CellState.alive;
+                    cells[xmid, ++ymid].State = CellState.alive;
+                    cells[xmid, ++ymid].State = CellState.alive;
                     break;
                 case Structure.Glider:
-                    cells[xmid, ymid] = 1;
-                    cells[xmid + 1, ymid] = 1;
-                    cells[xmid + 2, ymid] = 1;
-                    cells[xmid, ymid + 1] = 1;
-                    cells[xmid + 1, ymid + 2] = 1;
+                    cells[xmid, ymid].State = CellState.alive;
+                    cells[xmid + 1, ymid].State = CellState.alive;
+                    cells[xmid + 2, ymid].State = CellState.alive;
+                    cells[xmid, ymid + 1].State = CellState.alive;
+                    cells[xmid + 1, ymid + 2].State = CellState.alive;
                     break;
                 case Structure.Dakota:
-                    cells[xmid, ymid] = 1;
-                    cells[xmid, ymid - 1] = 1;
-                    cells[xmid, ymid - 2] = 1;
-                    cells[xmid + 1, ymid] = 1;
-                    cells[xmid + 2, ymid] = 1;
-                    cells[xmid + 3, ymid] = 1;
-                    cells[xmid + 1, ymid - 3] = 1;
-                    cells[xmid + 4, ymid - 1] = 1;
-                    cells[xmid + 4, ymid - 3] = 1;
+                    cells[xmid, ymid].State = CellState.alive;
+                    cells[xmid, ymid - 1].State = CellState.alive;
+                    cells[xmid, ymid - 2].State = CellState.alive;
+                    cells[xmid + 1, ymid].State = CellState.alive;
+                    cells[xmid + 2, ymid].State = CellState.alive;
+                    cells[xmid + 3, ymid].State = CellState.alive;
+                    cells[xmid + 1, ymid - 3].State = CellState.alive;
+                    cells[xmid + 4, ymid - 1].State = CellState.alive;
+                    cells[xmid + 4, ymid - 3].State = CellState.alive;
                     break;
             }
         }
@@ -175,30 +181,42 @@ namespace CellularAutomata
             }
         }
 
+        private Cell[,] createCoppy(Cell[,] cells)
+        {
+            Cell[,] newCells = new Cell[ibound + 1, jbound + 1];
+            for (int i = 0; i < ibound + 1; i++)
+                for (int j = 0; j < jbound + 1; j++)
+                {
+                    var cell = cells[i, j];
+                    newCells[i, j] = new Cell(cell.XCordinate, cell.YCordinate, CellState.dead);
+                }
+            return newCells;
+        }
+
         private void ComputeNextIterationCells()
         {
-            int[,] newCells = new int[cells.GetLength(0), cells.GetLength(1)];
-            //parallel version
+            Cell[,] newCells = createCoppy(Cells);
+            // parallel version
             var length = newCells.GetLength(1);
             Parallel.For(0, ibound + 1, index =>
                {
                    for (int j = 0; j < length; j++)
                    {
-                       newCells[index, j] = getCellstate(index, j);
+                       newCells[index, j].State = getCellstate(index, j);
                    }
                });
 
-            //sequential version
+            // sequential version
             //for (int i = 0; i < newCells.GetLength(0); i++)
             //    for (int j = 0; j < newCells.GetLength(1); j++)
-            //        newCells[i, j] = getCellstate(i, j);
+            //        newCells[i, j].State = getCellstate(i, j);
 
             cells = newCells;
         }
 
-        private List<int> getNeighboursMoorePeriodic(int i, int j)
+        private List<Cell> getNeighboursMoorePeriodic(int i, int j)
         {
-            List<int> neighbours = new List<int>(8);
+            List<Cell> neighbours = new List<Cell>(8);
 
             if (i == 0 && j != 0 && j != jbound)
             {
@@ -308,9 +326,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeigboursVonNoymanPeriodic(int i, int j)
+        private List<Cell> getNeigboursVonNoymanPeriodic(int i, int j)
         {
-            List<int> neighbours = new List<int>(4);
+            List<Cell> neighbours = new List<Cell>(4);
             if (i == 0 && j != 0 && j != jbound)
             {
                 neighbours.Add(cells[i, j - 1]);
@@ -378,9 +396,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeigboursVonNoyman(int i, int j)
+        private List<Cell> getNeigboursVonNoyman(int i, int j)
         {
-            List<int> neighbours = new List<int>();
+            List<Cell> neighbours = new List<Cell>();
 
             if (i == 0 && j != 0 && j != jbound)
             {
@@ -437,9 +455,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeighboursMoore(int i, int j)
+        private List<Cell> getNeighboursMoore(int i, int j)
         {
-            List<int> neighbours = new List<int>();
+            List<Cell> neighbours = new List<Cell>();
 
             if (i == 0 && j != 0 && j != jbound)
             {
@@ -515,9 +533,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeighboursRandomPentagonal(int i, int j)
+        private List<Cell> getNeighboursRandomPentagonal(int i, int j)
         {
-            List<int> neighbours = getNeighboursMoore(i, j);
+            List<Cell> neighbours = getNeighboursMoore(i, j);
 
             if (i == 0 && j != 0 && j != jbound)
             {
@@ -708,9 +726,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeighboursRandomPentagonalPeriodic(int i, int j)
+        private List<Cell> getNeighboursRandomPentagonalPeriodic(int i, int j)
         {
-            List<int> neighbours = new List<int>();
+            List<Cell> neighbours = new List<Cell>();
             neighbours = getNeighboursMoorePeriodic(i, j);
             switch (random.Next(0, 4))
             {
@@ -738,9 +756,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeighboursRandomHexagonal(int i, int j)
+        private List<Cell> getNeighboursRandomHexagonal(int i, int j)
         {
-            List<int> neighbours = neighbours = getNeighboursMoore(i, j);
+            List<Cell> neighbours = neighbours = getNeighboursMoore(i, j);
             if (i == 0 && j != 0 && j != jbound)
             {
                 switch (random.Next(0, 2))
@@ -855,9 +873,9 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        private List<int> getNeighboursRandomHexagonalPeriodic(int i, int j)
+        private List<Cell> getNeighboursRandomHexagonalPeriodic(int i, int j)
         {
-            List<int> neighbours = getNeighboursMoorePeriodic(i, j);
+            List<Cell> neighbours = getNeighboursMoorePeriodic(i, j);
 
             switch (random.Next(0, 2))
             {
@@ -873,28 +891,29 @@ namespace CellularAutomata
             return neighbours;
         }
 
-        public virtual int getCellstate(int i, int j)
+        public virtual CellState getCellstate(int i, int j)
         {
             //simple game of life rules
-            List<int> neighbours = getNeighboursState(i, j);
+            List<Cell> neighbours = getNeighboursState(i, j);
             int count = (from x in neighbours
-                         where x != 0
+                         where x.State != CellState.dead
                          select x).Count();
-            switch (cells[i, j])
+
+            switch (cells[i, j].State)
             {
-                case 0:
-                    return count == 3 ? 1 : 0;
-                case 1:
+                case CellState.dead:
+                    return count == 3 ? CellState.alive : CellState.dead;
+                case CellState.alive:
                     if (count == 2 || count == 3)
-                        return 1;
+                        return CellState.alive;
                     else if (count > 3 || count < 2)
-                        return 0;
+                        return CellState.dead;
                     break;
             }
             return 0;
         }
 
-        public int[,] Cells
+        public Cell[,] Cells
         {
             get
             {

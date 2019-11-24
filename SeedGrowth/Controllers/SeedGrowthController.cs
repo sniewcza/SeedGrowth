@@ -2,6 +2,7 @@
 using SeedGrowth.Utils;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 
 namespace SeedGrowth.Controllers
 {
@@ -14,6 +15,8 @@ namespace SeedGrowth.Controllers
         private int _radius;
         private int _xAxisSeeds;
         private int _yAxisSeeds;
+        private int _inclusionRadius = 0;
+        private int _numberOfInclusions = 0;
         private SeedGrowth _seedGrowth;
         private SeedDraw _seedDraw;
         private BoundaryConditions _boundoryConditionType;
@@ -59,10 +62,24 @@ namespace SeedGrowth.Controllers
         {
             _seedGrowth = SeedGrowthFactory.Create(_width, _height, _neighbourhoodType, _boundoryConditionType);
             setInitialSeeds();
-            _seedGrowth.OnIterationComplette += _seedGrowth_OnIterationComplette;
+            if (_numberOfInclusions != 0)
+            {
+                _seedGrowth.setInclusions(_numberOfInclusions, _inclusionRadius);
+            }
+            
+            _seedGrowth.onGrainChange += _seedGrowth_OnIterationComplette;
             _seedGrowth.PerformIterationStep();
         }
 
+        public void setInclusionRadius(int radius)
+        {
+            _inclusionRadius = radius;
+        }
+
+        public void setInclusionsNumber(int numberOfInclusions)
+        {
+            _numberOfInclusions = numberOfInclusions;
+        }
         public void setRadius(int radius)
         {
             _radius = radius;
@@ -100,7 +117,7 @@ namespace SeedGrowth.Controllers
             }
         }
 
-        private void _seedGrowth_OnIterationComplette(object sender, int[,] e)
+        private void _seedGrowth_OnIterationComplette(object sender, Color[,] e)
         {
             _view.setBitmap(SeedGrowthConverter.ConvertToBitmap(e));
         }

@@ -145,6 +145,8 @@ namespace SeedGrowth
             int xAxisSeeds = Convert.ToInt32(xAxisSeedsInputBox.Text == "" ? "3" : xAxisSeedsInputBox.Text);
             int yAxisSeeds = Convert.ToInt32(yAxisSeedsInputBox.Text == "" ? "3" : xAxisSeedsInputBox.Text);
             int radius = Convert.ToInt32(radiusInputBox.Text == "" ? "10" : radiusInputBox.Text);
+            int numberOfInclusions = Convert.ToInt32(inclusionNumberInputBox.Text == "" ? "0" : inclusionNumberInputBox.Text);
+            int inclusionRadius = Convert.ToInt32(inclusionRadiusInputBox.Text == "" ? "0" : inclusionRadiusInputBox.Text);
             var boundoryContidionType = Enum.Parse(typeof(BoundaryConditions), BCcomboBox.SelectedValue.ToString());
             var neighbourhoodType = Enum.Parse(typeof(Neighbourhood), NHcomboBox.SelectedValue.ToString());
 
@@ -165,6 +167,8 @@ namespace SeedGrowth
             _controller.setRadius(radius);
             _controller.setXAxisSeeds(xAxisSeeds);
             _controller.setYAxisSeeds(yAxisSeeds);
+            _controller.setInclusionsNumber(numberOfInclusions);
+            _controller.setInclusionRadius(inclusionRadius);
             _controller.initializeDomain();
 
             actionsGroupBox.Enabled = true;
