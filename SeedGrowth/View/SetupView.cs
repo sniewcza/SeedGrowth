@@ -147,8 +147,9 @@ namespace SeedGrowth
             simulationDisplayer?.Dispose();
             simulationDisplayer = new SimulationView
             {
-                Size = new Size(width + 20, height + 20)
+                Size = new Size(width + 20, height + 45)              
             };
+            simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseCLick;
             simulationDisplayer.pictureBox.Size = new Size(width, height);
             simulationDisplayer.Disposed += Form2_Disposed;
             simulationDisplayer.Show();
@@ -170,6 +171,11 @@ namespace SeedGrowth
 
         }
 
+        private void SimulationDisplayer_OnMouseCLick(object sender, MouseEventArgs e)
+        {
+            _controller.getSeedInfoRequest(e.X, e.Y);
+        }
+
         public void showExceptionMessage(string message)
         {
             MessageBox.Show(message);
@@ -187,6 +193,11 @@ namespace SeedGrowth
                 return saveFileDialog.FileName;
             }
             return null;
+        }
+
+        public void showInfo(string info)
+        {
+            previewInfoLabel.Text = info;
         }
     }
 }

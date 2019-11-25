@@ -63,11 +63,14 @@
             this.inclusionNumberInputBox = new System.Windows.Forms.MaskedTextBox();
             this.actionsGroupBox = new System.Windows.Forms.GroupBox();
             this.importDataButton = new System.Windows.Forms.Button();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.previewInfoLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.actionsGroupBox.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // startButton
@@ -447,12 +450,31 @@
             this.importDataButton.Text = "Import from file";
             this.importDataButton.UseVisualStyleBackColor = true;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.previewInfoLabel);
+            this.groupBox5.Location = new System.Drawing.Point(18, 519);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(643, 70);
+            this.groupBox5.TabIndex = 31;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Preview";
+            // 
+            // previewInfoLabel
+            // 
+            this.previewInfoLabel.AutoSize = true;
+            this.previewInfoLabel.Location = new System.Drawing.Point(15, 30);
+            this.previewInfoLabel.Name = "previewInfoLabel";
+            this.previewInfoLabel.Size = new System.Drawing.Size(0, 17);
+            this.previewInfoLabel.TabIndex = 0;
+            // 
             // SetupView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(679, 619);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.actionsGroupBox);
             this.Controls.Add(this.groupBox3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -469,6 +491,8 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.actionsGroupBox.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -509,6 +533,8 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.MaskedTextBox inclusionMaxRadiusInputBox;
         private System.Windows.Forms.Button importDataButton;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label previewInfoLabel;
     }
 }
 

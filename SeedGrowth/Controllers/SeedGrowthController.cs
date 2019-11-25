@@ -181,5 +181,10 @@ namespace SeedGrowth.Controllers
                 }
             }
         }
+
+        public void getSeedInfoRequest(int x, int y)
+        {
+            _view.showInfo(_seedGrowth.getSeedInfoAtPosition(x, y));
+        }
     }
 }

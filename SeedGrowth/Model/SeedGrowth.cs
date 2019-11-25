@@ -14,6 +14,7 @@ namespace SeedGrowth
         Random random = new Random(DateTime.Now.Millisecond);
         private Seed[,] seeds;
         private Guid inclusionId = Guid.NewGuid();
+        private Guid phaseId = Guid.NewGuid();
         private Dictionary<Guid, Color> grainMap = new Dictionary<Guid, Color>();
 
         public SeedGrowth(int N, int M) : base(N, M)
@@ -72,6 +73,7 @@ namespace SeedGrowth
                 if (orderedGrains.Count() > 0)
                 {
                     seeds[i, j].GrainId = orderedGrains.ElementAt(0).Key;
+                    seeds[i, j].PhaseId = phaseId;
                     return CellState.alive;
                 }
                 else
@@ -90,6 +92,7 @@ namespace SeedGrowth
             grainMap.Add(grainId, color);
             Cells[x, y].State = CellState.alive;
             seeds[x, y].GrainId = grainId;
+            seeds[x, y].PhaseId = phaseId;
         }
 
         public void setInclusions(int numberOfInclusions, int minRadius, int maxRadius)
@@ -101,21 +104,26 @@ namespace SeedGrowth
                 int y = random.Next(r, Jbound - r);
                 if (enoughSpaceForInclusion(x, y, r))
                 {
-                    setInclusion(x, y, r);
+                    createCircularInclusion(x, y, r);
                 }
             }
         }
-
 
         private void setInclusion(int x, int y, int radius)
         {
             Cells[x, y].State = CellState.alive;
             seeds[x, y].GrainId = inclusionId;
-            createCircularInclusion(x, y, radius, Color.White);
+            seeds[x, y].PhaseId = inclusionId;
+           // createCircularInclusion(x, y, radius, Color.White);
         }
 
-        private void createCircularInclusion(int x, int y, int radius, Color color)
+        private void createCircularInclusion(int x, int y, int radius)
         {
+            Cells[x, y].State = CellState.alive;
+           // var guid = Guid.NewGuid();
+            seeds[x, y].GrainId = inclusionId;
+            seeds[x, y].PhaseId = inclusionId;
+
             for (int i = -radius; i < radius; i++)
             {
                 for (int j = -radius; j < radius; j++)
@@ -124,6 +132,7 @@ namespace SeedGrowth
                     {
                         Cells[i + x, j + y].State = CellState.alive;
                         seeds[i + x, j + y].GrainId = inclusionId;
+                        seeds[i + x, j + y].PhaseId = inclusionId;
                     }
                 }
             }
@@ -148,6 +157,7 @@ namespace SeedGrowth
             }
             return true;
         }
+
         public void setSeedsEvenly(int XaxisSeeds, int YaxisSeeds)
         {
             int dx = Convert.ToInt32(Math.Round(Ibound / (double)(XaxisSeeds + 1)));
@@ -235,6 +245,12 @@ namespace SeedGrowth
                 grainMap = this.grainMap,
                 seeds = this.seeds
             };
+        }
+
+        public string getSeedInfoAtPosition(int x, int y)
+        {
+            var seed = seeds[x, y];
+            return $"grain Id: {seed.GrainId} \nphase Id: {seed.PhaseId}";
         }
     }
 }
