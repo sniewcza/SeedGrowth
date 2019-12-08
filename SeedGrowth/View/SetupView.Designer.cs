@@ -54,6 +54,8 @@
             this.nextStepButton = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.thresholdInputBox = new System.Windows.Forms.MaskedTextBox();
+            this.GBCCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.inclusionMaxRadiusInputBox = new System.Windows.Forms.MaskedTextBox();
@@ -334,6 +336,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.thresholdInputBox);
+            this.groupBox3.Controls.Add(this.GBCCheckBox);
             this.groupBox3.Controls.Add(this.groupBox4);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.button4);
@@ -356,6 +360,24 @@
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setup";
+            // 
+            // thresholdInputBox
+            // 
+            this.thresholdInputBox.Location = new System.Drawing.Point(507, 70);
+            this.thresholdInputBox.Name = "thresholdInputBox";
+            this.thresholdInputBox.Size = new System.Drawing.Size(128, 22);
+            this.thresholdInputBox.TabIndex = 31;
+            // 
+            // GBCCheckBox
+            // 
+            this.GBCCheckBox.AutoSize = true;
+            this.GBCCheckBox.Location = new System.Drawing.Point(507, 32);
+            this.GBCCheckBox.Name = "GBCCheckBox";
+            this.GBCCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.GBCCheckBox.Size = new System.Drawing.Size(59, 21);
+            this.GBCCheckBox.TabIndex = 30;
+            this.GBCCheckBox.Text = "GBC";
+            this.GBCCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -433,7 +455,6 @@
             this.actionsGroupBox.Controls.Add(this.startButton);
             this.actionsGroupBox.Controls.Add(this.exportDataButton);
             this.actionsGroupBox.Controls.Add(this.nextStepButton);
-            this.actionsGroupBox.Enabled = false;
             this.actionsGroupBox.Location = new System.Drawing.Point(13, 429);
             this.actionsGroupBox.Name = "actionsGroupBox";
             this.actionsGroupBox.Size = new System.Drawing.Size(648, 84);
@@ -449,6 +470,7 @@
             this.importDataButton.TabIndex = 28;
             this.importDataButton.Text = "Import from file";
             this.importDataButton.UseVisualStyleBackColor = true;
+            this.importDataButton.Click += new System.EventHandler(this.importDataButton_Click);
             // 
             // groupBox5
             // 
@@ -535,6 +557,8 @@
         private System.Windows.Forms.Button importDataButton;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label previewInfoLabel;
+        private System.Windows.Forms.CheckBox GBCCheckBox;
+        private System.Windows.Forms.MaskedTextBox thresholdInputBox;
     }
 }
 

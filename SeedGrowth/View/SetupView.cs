@@ -48,6 +48,21 @@ namespace SeedGrowth
             NHcomboBox.DataSource = new BindingSource(Enum.GetNames(typeof(Neighbourhood)), null);
             SDcomboBox.DataSource = new BindingSource(Enum.GetNames(typeof(SeedDraw)), null);
             SDcomboBox.SelectedValueChanged += ComboBox3_SelectedValueChanged;
+            GBCCheckBox.CheckStateChanged += GBCCheckBox_CheckStateChanged;
+        }
+
+        private void GBCCheckBox_CheckStateChanged(object sender, EventArgs e)
+        {
+           if(GBCCheckBox.CheckState == CheckState.Checked)
+            {
+                NHcomboBox.Enabled = false;
+                // NHcomboBox.SelectedValue = Enum.GetName(typeof(Neighbourhood),0);
+                NHcomboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                NHcomboBox.Enabled = true;
+            }
         }
 
         private void ComboBox3_SelectedValueChanged(object sender, EventArgs e)
@@ -81,7 +96,7 @@ namespace SeedGrowth
         private void Form2_Disposed(object sender, EventArgs e)
         {
             _controller.StopSeedGrowth();
-            actionsGroupBox.Enabled = false;
+           // actionsGroupBox.Enabled = false;
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -141,6 +156,7 @@ namespace SeedGrowth
             int numberOfInclusions = Convert.ToInt32(inclusionNumberInputBox.Text == "" ? "0" : inclusionNumberInputBox.Text);
             int inclusionsMaxRadius = Convert.ToInt32(inclusionMaxRadiusInputBox.Text == "" ? "0" : inclusionMaxRadiusInputBox.Text);
             int inclusionsMinRadius = Convert.ToInt32(inclusionMinRadiusInputBox.Text == "" ? "0" : inclusionMinRadiusInputBox.Text);
+            int threshold = Convert.ToInt32(thresholdInputBox.Text == "" ? "50" : thresholdInputBox.Text);
             var boundoryContidionType = Enum.Parse(typeof(BoundaryConditions), BCcomboBox.SelectedValue.ToString());
             var neighbourhoodType = Enum.Parse(typeof(Neighbourhood), NHcomboBox.SelectedValue.ToString());
 
@@ -165,6 +181,8 @@ namespace SeedGrowth
             _controller.setInclusionsNumber(numberOfInclusions);
             _controller.setInclusionMaxRadius(inclusionsMaxRadius);
             _controller.setInclusionMinRadius(inclusionsMinRadius);
+            _controller.setGBC(GBCCheckBox.Checked);
+            _controller.setActivationThreshold(threshold);
             _controller.initializeDomain();
 
             actionsGroupBox.Enabled = true;
@@ -198,6 +216,21 @@ namespace SeedGrowth
         public void showInfo(string info)
         {
             previewInfoLabel.Text = info;
+        }
+
+        private void importDataButton_Click(object sender, EventArgs e)
+        {
+            _controller.importSeedGrowthData();
+            simulationDisplayer?.Dispose();
+            simulationDisplayer = new SimulationView
+            {
+                Size = new Size(500 + 20, 500 + 45)
+            };
+            simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseCLick;
+            simulationDisplayer.pictureBox.Size = new Size(500, 500);
+            simulationDisplayer.Disposed += Form2_Disposed;
+            simulationDisplayer.Show();
+            _controller.performNextStep();
         }
     }
 }

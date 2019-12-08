@@ -26,7 +26,7 @@ namespace CellularAutomata
     }
 
     delegate List<Cell> getNeighbours(int i, int j);
-
+    delegate CellState getCellState(int i, int j);
     class CellularAutomata2D
     {
         public event EventHandler<Cell[,]> OnIterationComplette;
@@ -36,6 +36,7 @@ namespace CellularAutomata
         private readonly int jbound;
         private volatile bool isWorking = false;
         protected getNeighbours getNeighboursState;
+        protected getCellState getCellStateDelegate;
         private Random random = new Random(DateTime.Now.Millisecond);
 
         public CellularAutomata2D(int N, int M)
@@ -43,11 +44,10 @@ namespace CellularAutomata
             cells = new Cell[N, M];
             ibound = cells.GetUpperBound(0);
             jbound = cells.GetUpperBound(1);
+            getCellStateDelegate = this.getCellstate;
             for (int i = 0; i < ibound + 1; i++)
                 for (int j = 0; j < jbound + 1; j++)
                     cells[i, j] = new Cell(i, j, CellState.dead);
-
-
         }
 
         public void setNeighbourhoodType(NeigbhourhoodType type)
@@ -202,7 +202,7 @@ namespace CellularAutomata
                {
                    for (int j = 0; j < length; j++)
                    {
-                       newCells[index, j].State = getCellstate(index, j);
+                       newCells[index, j].State = getCellStateDelegate(index, j);
                    }
                });
 
@@ -891,6 +891,49 @@ namespace CellularAutomata
             return neighbours;
         }
 
+        public List<Cell> getnNeighboursNearestMoore(int i, int j)
+        {
+            var standardNeighbours = getNeighboursMoore(i, j);
+            //list is ordered reverse clockwise
+            standardNeighbours.RemoveAt(1);
+            standardNeighbours.RemoveAt(2);
+            standardNeighbours.RemoveAt(3);
+            standardNeighbours.RemoveAt(4);
+            return standardNeighbours;
+        }
+
+        public List<Cell> getNeighboursFourtherMoore(int i, int j)
+        {
+            //0,2,4,6
+            var standardNeighbours = getNeighboursMoore(i, j);
+            standardNeighbours.RemoveAt(0);
+            standardNeighbours.RemoveAt(1);
+            standardNeighbours.RemoveAt(2);
+            standardNeighbours.RemoveAt(3);
+            return standardNeighbours;
+
+        }
+
+        public List<Cell> getNeighboursNearestMoorePeriodic(int i, int j)
+        {
+            var standardNeighbours = getNeighboursMoorePeriodic(i, j);
+            //list is ordered revers clockwise
+            standardNeighbours.RemoveAt(1);
+            standardNeighbours.RemoveAt(2);
+            standardNeighbours.RemoveAt(3);
+            standardNeighbours.RemoveAt(4);
+            return standardNeighbours;
+        }
+
+        public List<Cell> getNeighboursFourtherMoorePeriodic(int i, int j)
+        {
+            var standardNeighbours = getNeighboursMoorePeriodic(i, j);
+            standardNeighbours.RemoveAt(0);
+            standardNeighbours.RemoveAt(1);
+            standardNeighbours.RemoveAt(2);
+            standardNeighbours.RemoveAt(3);
+            return standardNeighbours;
+        }
         public virtual CellState getCellstate(int i, int j)
         {
             //simple game of life rules
@@ -918,6 +961,10 @@ namespace CellularAutomata
             get
             {
                 return cells;
+            }
+            set
+            {
+                this.cells = value;
             }
         }
 

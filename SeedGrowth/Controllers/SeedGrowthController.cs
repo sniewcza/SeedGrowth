@@ -1,4 +1,5 @@
 ﻿using SeedGrowth.Interfaces;
+using SeedGrowth.Model;
 using SeedGrowth.Utils;
 using System;
 using System.ComponentModel;
@@ -22,6 +23,8 @@ namespace SeedGrowth.Controllers
         private int _inclusionMaxRadius = 0;
         private int _inclusionMinRadius = 0;
         private int _numberOfInclusions = 0;
+        private bool isGBCType = false;
+        private int _activationThreshold = 50;
         private SeedGrowth _seedGrowth;
         private SeedDraw _seedDraw;
         private BoundaryConditions _boundoryConditionType;
@@ -71,8 +74,12 @@ namespace SeedGrowth.Controllers
             {
                 _seedGrowth.setInclusions(_numberOfInclusions, _inclusionMinRadius, _inclusionMaxRadius);
             }
-
-            _seedGrowth.onGrainChange += _seedGrowth_OnIterationComplette;
+            if (isGBCType)
+            {
+                _seedGrowth.useGBC(true);
+                _seedGrowth._activationThreshold = _activationThreshold;
+            }
+            _seedGrowth.OnGrainChange += _seedGrowth_OnIterationComplette;
             _seedGrowth.PerformIterationStep();
         }
 
@@ -182,6 +189,46 @@ namespace SeedGrowth.Controllers
             }
         }
 
+        public void importSeedGrowthData()
+        {
+            string filePath = _view.getFilePath();
+            if(filePath != null)
+            {
+                IFormatter formatter = new BinaryFormatter();
+                try
+                {
+                    Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    var data = formatter.Deserialize(stream) as SeedGrowthDo;
+                    var width = data.seeds.GetLength(0);
+                    var height = data.seeds.GetLength(1);
+
+                    _seedGrowth = SeedGrowthFactory.Create(width, height, _neighbourhoodType, _boundoryConditionType);
+                    _seedGrowth.setSeeds(data.seeds);
+                    _seedGrowth.setGrainMap(data.grainMap);
+                    _seedGrowth.setCells(data.cells);
+                    if (isGBCType)
+                    {
+                        _seedGrowth.useGBC(true);
+                        _seedGrowth._activationThreshold = _activationThreshold;
+                    }
+                    _seedGrowth.OnGrainChange += _seedGrowth_OnIterationComplette;
+                   // _seedGrowth.PerformIterationStep();
+                }   
+                catch(Exception ex)
+                {
+                    _view.showExceptionMessage(ex.Message);
+                }
+            }
+        }
+
+        public void setGBC(bool cond)
+        {
+            isGBCType = cond;
+        }
+        public void setActivationThreshold(int t)
+        {
+            _activationThreshold = t;
+        }
         public void getSeedInfoRequest(int x, int y)
         {
             _view.showInfo(_seedGrowth.getSeedInfoAtPosition(x, y));
