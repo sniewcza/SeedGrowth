@@ -141,9 +141,18 @@ namespace SeedGrowth.Controllers
 
         public void StopSeedGrowth()
         {
-            _seedGrowth.Stop();
+            _seedGrowth?.Stop();
         }
 
+        public void removeGrain(int x, int y)
+        {
+            if (_seedGrowth.Work)
+            {
+                _seedGrowth.Stop();
+            }
+
+            _seedGrowth.removeGrain(x, y);
+        }
         public void setBoundaryConditionType(BoundaryConditions type)
         {
             _boundoryConditionType = type;
@@ -166,12 +175,12 @@ namespace SeedGrowth.Controllers
 
         public void performNextStep()
         {
-            _seedGrowth.PerformIterationStep();
+            _seedGrowth?.PerformIterationStep();
         }
 
         public void exportSeedGrowthData()
         {
-            string filePath = _view.getFilePath();
+            string filePath = _view.getExportFilePath();
             if (filePath != null)
             {
                 IFormatter formatter = new BinaryFormatter();
@@ -191,13 +200,14 @@ namespace SeedGrowth.Controllers
 
         public void importSeedGrowthData()
         {
-            string filePath = _view.getFilePath();
+            string filePath = _view.getImportFilePath();
             if(filePath != null)
             {
                 IFormatter formatter = new BinaryFormatter();
                 try
                 {
                     Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    
                     var data = formatter.Deserialize(stream) as SeedGrowthDo;
                     var width = data.seeds.GetLength(0);
                     var height = data.seeds.GetLength(1);
@@ -231,7 +241,7 @@ namespace SeedGrowth.Controllers
         }
         public void getSeedInfoRequest(int x, int y)
         {
-            _view.showInfo(_seedGrowth.getSeedInfoAtPosition(x, y));
+            _view.showInfo(_seedGrowth?.getSeedInfoAtPosition(x, y));
         }
     }
 }

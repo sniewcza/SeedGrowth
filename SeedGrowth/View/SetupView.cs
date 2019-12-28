@@ -53,14 +53,15 @@ namespace SeedGrowth
 
         private void GBCCheckBox_CheckStateChanged(object sender, EventArgs e)
         {
-           if(GBCCheckBox.CheckState == CheckState.Checked)
+            if (GBCCheckBox.CheckState == CheckState.Checked)
             {
                 NHcomboBox.Enabled = false;
-                // NHcomboBox.SelectedValue = Enum.GetName(typeof(Neighbourhood),0);
                 NHcomboBox.SelectedIndex = 0;
+                thresholdInputBox.Enabled = true;
             }
             else
             {
+                thresholdInputBox.Enabled = false;
                 NHcomboBox.Enabled = true;
             }
         }
@@ -96,7 +97,7 @@ namespace SeedGrowth
         private void Form2_Disposed(object sender, EventArgs e)
         {
             _controller.StopSeedGrowth();
-           // actionsGroupBox.Enabled = false;
+            // actionsGroupBox.Enabled = false;
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -163,9 +164,10 @@ namespace SeedGrowth
             simulationDisplayer?.Dispose();
             simulationDisplayer = new SimulationView
             {
-                Size = new Size(width + 20, height + 45)              
+                Size = new Size(width + 20, height + 45)
             };
-            simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseCLick;
+            simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseMove;
+            simulationDisplayer.OnMouseClick += SimulationDisplayer_OnMouseClick;
             simulationDisplayer.pictureBox.Size = new Size(width, height);
             simulationDisplayer.Disposed += Form2_Disposed;
             simulationDisplayer.Show();
@@ -189,27 +191,29 @@ namespace SeedGrowth
 
         }
 
-        private void SimulationDisplayer_OnMouseCLick(object sender, MouseEventArgs e)
+        private void SimulationDisplayer_OnMouseMove(object sender, MouseEventArgs e)
         {
             _controller.getSeedInfoRequest(e.X, e.Y);
         }
 
+        private void SimulationDisplayer_OnMouseClick(object sender,MouseEventArgs e)
+        {
+            _controller.removeGrain(e.X, e.Y);
+        }
         public void showExceptionMessage(string message)
         {
             MessageBox.Show(message);
         }
 
-        public string getFilePath()
+        public string getImportFilePath()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                AddExtension = true,
-            };
+            OpenFileDialog dialog = new OpenFileDialog();
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
-                return saveFileDialog.FileName;
+                return dialog.FileName;
             }
+
             return null;
         }
 
@@ -226,11 +230,27 @@ namespace SeedGrowth
             {
                 Size = new Size(500 + 20, 500 + 45)
             };
-            simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseCLick;
+            simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseMove;
             simulationDisplayer.pictureBox.Size = new Size(500, 500);
             simulationDisplayer.Disposed += Form2_Disposed;
             simulationDisplayer.Show();
             _controller.performNextStep();
+        }
+
+        public string getExportFilePath()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                AddExtension = true,
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                return saveFileDialog.FileName;
+            }
+            return null;
+
+           
         }
     }
 }

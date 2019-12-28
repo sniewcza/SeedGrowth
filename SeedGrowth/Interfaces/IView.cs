@@ -9,7 +9,8 @@ namespace SeedGrowth.Interfaces
         void setController(SeedGrowthController controller);
         void setBitmap(Bitmap bitmap);
         void showExceptionMessage(string message);
-        string getFilePath();
+        string getImportFilePath();
+        string getExportFilePath();
         void showInfo(string info);
     }
 }

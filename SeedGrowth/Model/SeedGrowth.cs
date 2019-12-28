@@ -31,6 +31,25 @@ namespace SeedGrowth
             this.OnIterationComplette += SeedGrowth_OnIterationComplette;
         }
 
+        public void removeGrain(int x, int y)
+        {
+            var grainId = seeds[x, y].GrainId;
+            if(grainId != Guid.Empty)
+            { 
+                for(int i =0;i<Ibound;i++)
+                    for(int j = 0; j < Jbound; j++)
+                    {
+                        if(seeds[i,j].GrainId == grainId)
+                        {
+                            Cells[i, j].State = CellState.dead;
+                            seeds[i, j].State = CellState.dead;
+                            seeds[i, j].GrainId = Guid.Empty;
+                        }
+                    }
+                grainMap.Remove(grainId);
+                this.SeedGrowth_OnIterationComplette(this, Cells);
+            }
+        }
         public void useGBC(bool cond)
         {
             if (cond)
@@ -342,14 +361,6 @@ namespace SeedGrowth
             foreach (Point p in seeds)
                 setSeed(p.X, p.Y);
         }
-
-        //private bool areFreeCells()
-        //{
-        //    foreach (int c in Cells)
-        //        if (c == Color.Black.ToArgb())
-        //            return true;
-        //    return false;
-        //}
 
         private double getSeedsDistance(Point p1, Point p2)
         {

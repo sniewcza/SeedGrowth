@@ -101,7 +101,7 @@
             // 
             this.BCcomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.BCcomboBox.FormattingEnabled = true;
-            this.BCcomboBox.Location = new System.Drawing.Point(340, 69);
+            this.BCcomboBox.Location = new System.Drawing.Point(322, 69);
             this.BCcomboBox.Margin = new System.Windows.Forms.Padding(4);
             this.BCcomboBox.Name = "BCcomboBox";
             this.BCcomboBox.Size = new System.Drawing.Size(160, 24);
@@ -159,7 +159,7 @@
             // 
             this.NHcomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.NHcomboBox.FormattingEnabled = true;
-            this.NHcomboBox.Location = new System.Drawing.Point(368, 29);
+            this.NHcomboBox.Location = new System.Drawing.Point(296, 29);
             this.NHcomboBox.Margin = new System.Windows.Forms.Padding(4);
             this.NHcomboBox.Name = "NHcomboBox";
             this.NHcomboBox.Size = new System.Drawing.Size(132, 24);
@@ -168,7 +168,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(254, 34);
+            this.label4.Location = new System.Drawing.Point(182, 32);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(106, 17);
@@ -178,7 +178,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(195, 72);
+            this.label5.Location = new System.Drawing.Point(177, 72);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(137, 17);
@@ -363,15 +363,18 @@
             // 
             // thresholdInputBox
             // 
-            this.thresholdInputBox.Location = new System.Drawing.Point(507, 70);
+            this.thresholdInputBox.Enabled = false;
+            this.thresholdInputBox.Location = new System.Drawing.Point(509, 31);
+            this.thresholdInputBox.Mask = "00000";
             this.thresholdInputBox.Name = "thresholdInputBox";
             this.thresholdInputBox.Size = new System.Drawing.Size(128, 22);
             this.thresholdInputBox.TabIndex = 31;
+            this.thresholdInputBox.ValidatingType = typeof(int);
             // 
             // GBCCheckBox
             // 
             this.GBCCheckBox.AutoSize = true;
-            this.GBCCheckBox.Location = new System.Drawing.Point(507, 32);
+            this.GBCCheckBox.Location = new System.Drawing.Point(444, 31);
             this.GBCCheckBox.Name = "GBCCheckBox";
             this.GBCCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.GBCCheckBox.Size = new System.Drawing.Size(59, 21);
