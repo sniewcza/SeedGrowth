@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Windows.Forms;
 using SeedGrowth.Interfaces;
 using SeedGrowth.Controllers;
+using SeedGrowth.View;
 
 namespace SeedGrowth
 {
@@ -97,7 +97,6 @@ namespace SeedGrowth
         private void Form2_Disposed(object sender, EventArgs e)
         {
             _controller.StopSeedGrowth();
-            // actionsGroupBox.Enabled = false;
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -196,7 +195,7 @@ namespace SeedGrowth
             _controller.getSeedInfoRequest(e.X, e.Y);
         }
 
-        private void SimulationDisplayer_OnMouseClick(object sender,MouseEventArgs e)
+        private void SimulationDisplayer_OnMouseClick(object sender, MouseEventArgs e)
         {
             _controller.removeGrain(e.X, e.Y);
         }
@@ -250,7 +249,37 @@ namespace SeedGrowth
             }
             return null;
 
-           
+
+        }
+
+        private void DualPhaseButton_Click(object sender, EventArgs e)
+        {
+            _controller.setupDualPhase();
+        }
+
+        public int? getNumber()
+        {
+            NumberInputBox inputBox = new NumberInputBox()
+            {
+                Label = "Set new amount of seeds"
+            };
+
+
+            if (inputBox.ShowDialog() == DialogResult.OK)
+            {
+                return inputBox.Value;
+            }
+            return null;
+        }
+
+        private void markBoundariesButton_Click(object sender, EventArgs e)
+        {
+            _controller.markBoundaries();
+        }
+
+        private void statisticButton_Click(object sender, EventArgs e)
+        {
+            _controller.getStatistic();
         }
     }
 }

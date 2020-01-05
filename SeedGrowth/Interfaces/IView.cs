@@ -1,5 +1,4 @@
 ﻿using SeedGrowth.Controllers;
-using System;
 using System.Drawing;
 
 namespace SeedGrowth.Interfaces
@@ -9,6 +8,7 @@ namespace SeedGrowth.Interfaces
         void setController(SeedGrowthController controller);
         void setBitmap(Bitmap bitmap);
         void showExceptionMessage(string message);
+        int? getNumber();
         string getImportFilePath();
         string getExportFilePath();
         void showInfo(string info);

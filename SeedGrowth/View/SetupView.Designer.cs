@@ -54,6 +54,7 @@
             this.nextStepButton = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.DualPhaseButton = new System.Windows.Forms.Button();
             this.thresholdInputBox = new System.Windows.Forms.MaskedTextBox();
             this.GBCCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -67,6 +68,8 @@
             this.importDataButton = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.previewInfoLabel = new System.Windows.Forms.Label();
+            this.markBoundariesButton = new System.Windows.Forms.Button();
+            this.statisticButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -336,6 +339,9 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.statisticButton);
+            this.groupBox3.Controls.Add(this.markBoundariesButton);
+            this.groupBox3.Controls.Add(this.DualPhaseButton);
             this.groupBox3.Controls.Add(this.thresholdInputBox);
             this.groupBox3.Controls.Add(this.GBCCheckBox);
             this.groupBox3.Controls.Add(this.groupBox4);
@@ -360,6 +366,16 @@
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setup";
+            // 
+            // DualPhaseButton
+            // 
+            this.DualPhaseButton.Location = new System.Drawing.Point(358, 275);
+            this.DualPhaseButton.Name = "DualPhaseButton";
+            this.DualPhaseButton.Size = new System.Drawing.Size(70, 23);
+            this.DualPhaseButton.TabIndex = 32;
+            this.DualPhaseButton.Text = "DP";
+            this.DualPhaseButton.UseVisualStyleBackColor = true;
+            this.DualPhaseButton.Click += new System.EventHandler(this.DualPhaseButton_Click);
             // 
             // thresholdInputBox
             // 
@@ -493,6 +509,26 @@
             this.previewInfoLabel.Size = new System.Drawing.Size(0, 17);
             this.previewInfoLabel.TabIndex = 0;
             // 
+            // markBoundariesButton
+            // 
+            this.markBoundariesButton.Location = new System.Drawing.Point(444, 275);
+            this.markBoundariesButton.Name = "markBoundariesButton";
+            this.markBoundariesButton.Size = new System.Drawing.Size(128, 23);
+            this.markBoundariesButton.TabIndex = 33;
+            this.markBoundariesButton.Text = "Mark boundaries";
+            this.markBoundariesButton.UseVisualStyleBackColor = true;
+            this.markBoundariesButton.Click += new System.EventHandler(this.markBoundariesButton_Click);
+            // 
+            // statisticButton
+            // 
+            this.statisticButton.Location = new System.Drawing.Point(444, 305);
+            this.statisticButton.Name = "statisticButton";
+            this.statisticButton.Size = new System.Drawing.Size(128, 23);
+            this.statisticButton.TabIndex = 34;
+            this.statisticButton.Text = "Statistic";
+            this.statisticButton.UseVisualStyleBackColor = true;
+            this.statisticButton.Click += new System.EventHandler(this.statisticButton_Click);
+            // 
             // SetupView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -562,6 +598,9 @@
         private System.Windows.Forms.Label previewInfoLabel;
         private System.Windows.Forms.CheckBox GBCCheckBox;
         private System.Windows.Forms.MaskedTextBox thresholdInputBox;
+        private System.Windows.Forms.Button DualPhaseButton;
+        private System.Windows.Forms.Button markBoundariesButton;
+        private System.Windows.Forms.Button statisticButton;
     }
 }
 

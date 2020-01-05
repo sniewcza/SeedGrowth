@@ -7,7 +7,6 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Windows.Forms;
 
 namespace SeedGrowth.Controllers
 {
@@ -153,6 +152,19 @@ namespace SeedGrowth.Controllers
 
             _seedGrowth.removeGrain(x, y);
         }
+
+        public void setupDualPhase()
+        {
+            var value = _view.getNumber();
+            if (value != null)
+            {
+                _seedGrowth.markRemainingStructureAsPhase();
+                _seedGrowth.useDP(true);
+                _seedGrowth.setSeedsRandomly(value.Value);
+                this.StartSeedGrowth();
+            }
+        }
+
         public void setBoundaryConditionType(BoundaryConditions type)
         {
             _boundoryConditionType = type;
@@ -231,6 +243,14 @@ namespace SeedGrowth.Controllers
             }
         }
 
+        public void getStatistic()
+        {
+            _view.showInfo($"Edges length: {_seedGrowth.getEdgesLength()} \nGrain mean size: {_seedGrowth.getGrainMeanSize()}");
+        }
+        public void markBoundaries()
+        {
+            _view.setBitmap(SeedGrowthConverter.ConvertToBitmap(_seedGrowth.findBoundaries()));
+        }
         public void setGBC(bool cond)
         {
             isGBCType = cond;
