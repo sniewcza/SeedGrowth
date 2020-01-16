@@ -79,7 +79,7 @@ namespace SeedGrowth.Controllers
                 _seedGrowth._activationThreshold = _activationThreshold;
             }
             _seedGrowth.OnGrainChange += _seedGrowth_OnIterationComplette;
-            _seedGrowth.PerformIterationStep();
+            _seedGrowth.init();
         }
 
         public void setInclusionMaxRadius(int radius)
@@ -123,14 +123,10 @@ namespace SeedGrowth.Controllers
 
         public void StartSeedGrowth()
         {
-            try
-            {
+            
                 _worker.RunWorkerAsync();
-            }
-            catch (InvalidOperationException)
-            {
-
-            }
+            
+            
         }
 
         private void _seedGrowth_OnIterationComplette(object sender, Color[,] e)

@@ -10,7 +10,7 @@ namespace SeedGrowth
 
         public Seed(int x, int y, CellState state) : base(x, y, state)
         {
-            //_grainId = null;
+            _grainId = Guid.Empty;
             //_phaseId = null;
         }
 

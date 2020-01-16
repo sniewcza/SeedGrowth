@@ -5,16 +5,20 @@ using System.Linq;
 using CellularAutomata;
 using System.Drawing;
 using SeedGrowth.Model;
+using System.Threading.Tasks;
 
 namespace SeedGrowth
 {
     class SeedGrowth : CellularAutomata2D
     {
+        delegate Seed getSeedState(int x, int y);
         public event EventHandler<Color[,]> OnGrainChange;
+        private getSeedState getSeedStateDelegate;
         Random random = new Random(DateTime.Now.Millisecond);
         private Seed[,] seeds;
         private Seed[,] seedsWithBoundaries;
         public int _activationThreshold;
+        private bool useGBCFeature;
         private Guid inclusionId = Guid.NewGuid();
         private Guid phaseId = Guid.NewGuid();
         private Guid dualPhaseId = Guid.NewGuid();
@@ -24,13 +28,14 @@ namespace SeedGrowth
         {
             grainMap.Add(Guid.Empty, Color.Black);
             grainMap.Add(inclusionId, Color.White);
-            this.getCellStateDelegate = getCellstate;
+            this.getSeedStateDelegate = this.getCellstate;
             seeds = new Seed[N, M];
             for (int i = 0; i < N; i++)
                 for (int j = 0; j < M; j++)
                     seeds[i, j] = new Seed(i, j, CellState.dead);
 
             this.OnIterationComplette += SeedGrowth_OnIterationComplette;
+            this.computeNextIterationDelegate = this.computeNextIteration;
         }
 
         public void removeGrain(int x, int y)
@@ -55,28 +60,51 @@ namespace SeedGrowth
 
         public void useDP(bool cond)
         {
-            this.getCellStateDelegate = this.getCellStateDualPhase;
+            getSeedStateDelegate = this.getCellStateDualPhase;
         }
 
         public void useGBC(bool cond)
         {
             if (cond)
             {
-                this.getCellStateDelegate = this.getCellStateGBC;
+
+                useGBCFeature = true;
+                getSeedStateDelegate = this.getCellStateGBC;
             }
             else
             {
-                this.getCellStateDelegate = this.getCellstate;
+                getSeedStateDelegate = this.getCellstate;
+                useGBCFeature = false;
             }
+        }
+
+        public void init()
+        {
+            Color[,] colors = new Color[Cells.GetUpperBound(0) + 1, Cells.GetUpperBound(1) + 1];
+            foreach (var s in seeds)
+            {
+                colors[s.XCordinate, s.YCordinate] = grainMap[seeds[s.XCordinate, s.YCordinate].GrainId];
+            }
+            OnGrainChange?.Invoke(this, colors);
         }
 
         private void SeedGrowth_OnIterationComplette(object sender, Cell[,] e)
         {
-            Color[,] colors = new Color[e.GetUpperBound(0) + 1, e.GetUpperBound(1) + 1];
-            foreach (var cell in e)
+            Color[,] colors = new Color[Ibound + 1, Jbound + 1];
+            Parallel.For(0, Ibound + 1, index =>
             {
-                colors[cell.XCordinate, cell.YCordinate] = grainMap[seeds[cell.XCordinate, cell.YCordinate].GrainId];
-            }
+                for (int j = 0; j < Jbound + 1; j++)
+                {
+                    var seed = seeds[index, j];
+                    int x = seed.XCordinate;
+                    int y = seed.YCordinate;
+                    colors[x, y] = grainMap[seed.GrainId];
+                }
+            });
+            //foreach (var seed in seeds)
+            //{
+            //    colors[seed.XCordinate, seed.YCordinate] = grainMap[seed.GrainId];
+            //}
 
             OnGrainChange?.Invoke(this, colors);
         }
@@ -92,6 +120,39 @@ namespace SeedGrowth
             return seeds;
         }
 
+        private void computeNextIteration()
+        {
+            Seed[,] newCells = new Seed[Ibound + 1, Jbound + 1];
+            // parallel version
+            var length = newCells.GetLength(1);
+            Parallel.For(0, Ibound + 1, index =>
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    newCells[index, j] = getSeedStateDelegate(index, j);
+                }
+            });
+            //for (int i = 0; i < newCells.GetLength(0); i++)
+            //    for (int j = 0; j < newCells.GetLength(1); j++)
+            //        newCells[i, j] = this.useGBCFeature ? getCellStateGBC(i, j) : getCellstate(i, j);
+            seeds = newCells;
+        }
+        private Seed[,] createCoopy(Seed[,] seeds)
+        {
+
+            Seed[,] newSeeds = new Seed[Ibound + 1, Jbound + 1];
+            for (int i = 0; i < Ibound + 1; i++)
+                for (int j = 0; j < Jbound + 1; j++)
+                {
+                    var seed = seeds[i, j];
+                    newSeeds[i, j] = new Seed(seed.XCordinate, seed.YCordinate, seed.State)
+                    {
+                        GrainId = seed.GrainId,
+                        PhaseId = seed.PhaseId
+                    };
+                }
+            return newSeeds;
+        }
         public void markRemainingStructureAsPhase()
         {
             for (int i = 0; i < Ibound + 1; i++)
@@ -111,128 +172,139 @@ namespace SeedGrowth
 
             this.SeedGrowth_OnIterationComplette(this, Cells);
         }
-        public CellState getCellStateGBC(int i, int j)
+        public Seed getCellStateGBC(int i, int j)
         {
-            if (Cells[i, j].State == CellState.alive)
+            if (seeds[i, j].State == CellState.alive)
             {
-                return CellState.alive;
+                return seeds[i, j];
             }
 
             var r1 = R1(i, j);
-            if (r1 == true)
+            if (r1 != null)
             {
-                return CellState.alive;
+                return r1;
             }
             else
             {
                 var r2 = R2(i, j);
-                if (r2 == true)
+                if (r2 != null)
                 {
-                    return CellState.alive;
+                    return r2;
                 }
                 else
                 {
                     var r3 = R3(i, j);
-                    if (r3 == true)
+                    if (r3 != null)
                     {
-                        return CellState.alive;
+
+                        return r3;
                     }
                     else
                     {
-                        return R4(i, j);
+                        var r4 = R4(i, j);
+                        if (r4 != null)
+                        {
+                            return r4;
+                        }
+                        else
+                        {
+                            return seeds[i, j];
+                        }
                     }
                 }
             }
+
         }
 
-        private bool R1(int i, int j)
+        private Seed R1(int i, int j)
         {
-            List<Cell> neighbours = getNeighboursState(i, j);
+            var neighbours = getNeighboursState(seeds, i, j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
             if (aliveNeighbours >= 5)
             {
-                var neigbourSeeds = toSeeds(neighbours);
-                var grainsOnly = neigbourSeeds
+                var grainsOnly = neighbours
                    .Where(s => s.GrainId != Guid.Empty)
                    .Where(s => s.GrainId != inclusionId)
                    .GroupBy(s => s.GrainId).Where(g => g.Count() >= 5);
                 if (grainsOnly.Count() > 0)
                 {
-                    seeds[i, j].GrainId = grainsOnly.ElementAt(0).Key;
-                    seeds[i, j].PhaseId = phaseId;
-                    return true;
+                    return new Seed(i, j, CellState.alive)
+                    {
+                        GrainId = grainsOnly.ElementAt(0).Key,
+                        PhaseId = phaseId
+                    };
                 }
             }
-            return false;
+            return null;
         }
 
-        private bool R2(int i, int j)
+        private Seed R2(int i, int j)
         {
-            List<Cell> neighbours = getnNeighboursNearestMoore(i, j);
+            var neighbours = getNeighboursMoore(seeds, i, j).Where(c => c.XCordinate == i || c.YCordinate == j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
             if (aliveNeighbours >= 3)
             {
-                var neigbourSeeds = toSeeds(neighbours);
-                var grainsOnly = neigbourSeeds
+                var grainsOnly = neighbours
                    .Where(s => s.GrainId != Guid.Empty)
                    .Where(s => s.GrainId != inclusionId)
                    .GroupBy(s => s.GrainId).Where(g => g.Count() >= 3);
                 if (grainsOnly.Count() > 0)
                 {
-                    seeds[i, j].GrainId = grainsOnly.ElementAt(0).Key;
-                    seeds[i, j].PhaseId = phaseId;
-                    return true;
+                    return new Seed(i, j, CellState.alive)
+                    {
+                        GrainId = grainsOnly.ElementAt(0).Key,
+                        PhaseId = phaseId
+                    };
                 }
             }
-            return false;
+            return null;
         }
 
-        private bool R3(int i, int j)
+        private Seed R3(int i, int j)
         {
-            List<Cell> neighbours = getNeighboursFourtherMoore(i, j);
+            var neighbours = getNeighboursMoore(seeds, i, j).Where(c => c.XCordinate != i && c.YCordinate != j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
             if (aliveNeighbours >= 3)
             {
-                var neigbourSeeds = toSeeds(neighbours);
-                var grainsOnly = neigbourSeeds
+                var grainsOnly = neighbours
                    .Where(s => s.GrainId != Guid.Empty)
                    .Where(s => s.GrainId != inclusionId)
                    .GroupBy(s => s.GrainId).Where(g => g.Count() >= 3);
                 if (grainsOnly.Count() > 0)
                 {
-                    seeds[i, j].GrainId = grainsOnly.ElementAt(0).Key;
-                    seeds[i, j].PhaseId = phaseId;
-                    return true;
+                    return new Seed(i, j, CellState.alive)
+                    {
+                        GrainId = grainsOnly.ElementAt(0).Key,
+                        PhaseId = phaseId
+                    };
                 }
             }
-            return false;
+            return null;
         }
 
-        private CellState R4(int i, int j)
+        private Seed R4(int i, int j)
         {
             var r = new Random(DateTime.Now.Millisecond);
             var rx = r.Next(1, 100);
             if (rx >= _activationThreshold)
             {
                 return this.getCellstate(i, j);
-
             }
-            return CellState.dead;
+            return null;
         }
 
-        public CellState getCellStateDualPhase(int i, int j)
+        public Seed getCellStateDualPhase(int i, int j)
         {
-            if (Cells[i, j].State == CellState.alive)
+            if (seeds[i, j].State == CellState.alive)
             {
-                return CellState.alive;
+                return seeds[i, j];
             }
-            List<Cell> neighbours = getNeighboursState(i, j);
+            var neighbours = getNeighboursState(seeds, i, j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
 
-            if (Cells[i, j].State == CellState.dead && aliveNeighbours != 0)
+            if (seeds[i, j].State == CellState.dead && aliveNeighbours != 0)
             {
-                var neigbourSeeds = toSeeds(neighbours);
-                var grainsOnly = neigbourSeeds
+                var grainsOnly = neighbours
                     .Where(s => s.GrainId != Guid.Empty)
                     .Where(s => s.GrainId != inclusionId)
                     .Where(s => s.GrainId != dualPhaseId)
@@ -241,34 +313,33 @@ namespace SeedGrowth
                 var orderedGrains = grainsOnly.OrderByDescending(g => g.Count());
                 if (orderedGrains.Count() > 0)
                 {
-                    seeds[i, j].GrainId = orderedGrains.ElementAt(0).Key;
-                    seeds[i, j].PhaseId = phaseId;
-                    return CellState.alive;
+                    return new Seed(i, j, CellState.alive)
+                    {
+                        GrainId = orderedGrains.ElementAt(0).Key,
+                        PhaseId = phaseId
+                    };
                 }
                 else
                 {
-                    return CellState.dead;
+                    return new Seed(i, j, CellState.dead);
                 }
-
             }
             else
-                return CellState.dead;
-
+                return new Seed(i, j, CellState.dead);
         }
 
-        public override CellState getCellstate(int i, int j)
+        public Seed getCellstate(int i, int j)
         {
-            if (Cells[i, j].State == CellState.alive)
+            if (seeds[i, j].State == CellState.alive)
             {
-                return CellState.alive;
+                return seeds[i, j];
             }
-            List<Cell> neighbours = getNeighboursState(i, j);
+            var neighbours = getNeighboursState(seeds, i, j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
 
-            if (Cells[i, j].State == CellState.dead && aliveNeighbours != 0)
+            if (seeds[i, j].State == CellState.dead && aliveNeighbours != 0)
             {
-                var neigbourSeeds = toSeeds(neighbours);
-                var grainsOnly = neigbourSeeds
+                var grainsOnly = neighbours
                     .Where(s => s.GrainId != Guid.Empty)
                     .Where(s => s.GrainId != inclusionId)
                     .GroupBy(s => s.GrainId);
@@ -276,18 +347,20 @@ namespace SeedGrowth
                 var orderedGrains = grainsOnly.OrderByDescending(g => g.Count());
                 if (orderedGrains.Count() > 0)
                 {
-                    seeds[i, j].GrainId = orderedGrains.ElementAt(0).Key;
-                    seeds[i, j].PhaseId = phaseId;
-                    return CellState.alive;
+                    return new Seed(i, j, CellState.alive)
+                    {
+                        GrainId = orderedGrains.ElementAt(0).Key,
+                        PhaseId = phaseId
+                    };
                 }
                 else
                 {
-                    return CellState.dead;
+                    return new Seed(i, j, CellState.dead);
                 }
 
             }
             else
-                return CellState.dead;
+                return new Seed(i, j, CellState.dead);
         }
 
         public void setSeed(int x, int y)
@@ -295,7 +368,7 @@ namespace SeedGrowth
             Color color = Color.FromArgb(255, random.Next(1, 254), random.Next(1, 254), random.Next(1, 254));
             var grainId = Guid.NewGuid();
             grainMap.Add(grainId, color);
-            Cells[x, y].State = CellState.alive;
+            seeds[x, y].State = CellState.alive;
             seeds[x, y].GrainId = grainId;
             seeds[x, y].PhaseId = phaseId;
         }
@@ -316,14 +389,14 @@ namespace SeedGrowth
 
         private void setInclusion(int x, int y, int radius)
         {
-            Cells[x, y].State = CellState.alive;
+            seeds[x, y].State = CellState.alive;
             seeds[x, y].GrainId = inclusionId;
             seeds[x, y].PhaseId = inclusionId;
         }
 
         private void createCircularInclusion(int x, int y, int radius)
         {
-            Cells[x, y].State = CellState.alive;
+            seeds[x, y].State = CellState.alive;
             seeds[x, y].GrainId = inclusionId;
             seeds[x, y].PhaseId = inclusionId;
 
@@ -333,7 +406,7 @@ namespace SeedGrowth
                 {
                     if (isInRangeRadius(i, j, radius))
                     {
-                        Cells[i + x, j + y].State = CellState.alive;
+                        seeds[i + x, j + y].State = CellState.alive;
                         seeds[i + x, j + y].GrainId = inclusionId;
                         seeds[i + x, j + y].PhaseId = inclusionId;
                     }
@@ -352,7 +425,7 @@ namespace SeedGrowth
             {
                 for (int j = y - radius; j < y + radius; j++)
                 {
-                    if (Cells[i, j].State == CellState.alive)
+                    if (seeds[i, j].State == CellState.alive)
                     {
                         return false;
                     }
@@ -384,7 +457,7 @@ namespace SeedGrowth
             seedsWithBoundaries = new Seed[Ibound + 1, Jbound + 1];
             foreach (Seed s in seeds)
             {
-                var n = getNeighboursState(s.XCordinate, s.YCordinate);
+                var n = getNeighboursState(seeds, s.XCordinate, s.YCordinate);
                 var isOnEdge = n.Any(c => s.GrainId != seeds[c.XCordinate, c.YCordinate].GrainId);
                 seedsWithBoundaries[s.XCordinate, s.YCordinate] = new Seed(s.XCordinate, s.YCordinate, s.State) { GrainId = s.GrainId, PhaseId = s.PhaseId };
                 if (isOnEdge)
@@ -392,7 +465,6 @@ namespace SeedGrowth
                     seedsWithBoundaries[s.XCordinate, s.YCordinate].GrainId = Guid.Empty;
                 }
             }
-            // seeds = seedsWithBoundaries;
             Color[,] colors = new Color[Ibound + 1, Jbound + 1];
             foreach (var seed in seedsWithBoundaries)
             {
@@ -443,7 +515,7 @@ namespace SeedGrowth
             {
                 x = random.Next(0, Ibound);
                 y = random.Next(0, Jbound);
-            } while (Cells[x, y].State != CellState.dead && seeds[x, y].GrainId != Guid.Empty);
+            } while (seeds[x, y].State != CellState.dead && seeds[x, y].GrainId != Guid.Empty);
 
             return new Tuple<int, int>(x, y);
         }
