@@ -149,6 +149,17 @@ namespace SeedGrowth.Controllers
             _seedGrowth.removeGrain(x, y);
         }
 
+        public void setupSubstructures()
+        {
+            var value = _view.getNumber();
+            if (value != null)
+            {
+                _seedGrowth.setRemainingStructureAsImmutable();
+                _seedGrowth.useSubstructures(true);
+                _seedGrowth.setSeedsRandomly(value.Value);
+                this.StartSeedGrowth();
+            }
+        }
         public void setupDualPhase()
         {
             var value = _view.getNumber();

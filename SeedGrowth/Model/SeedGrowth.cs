@@ -21,8 +21,10 @@ namespace SeedGrowth
         private bool useGBCFeature;
         private Guid inclusionId = Guid.NewGuid();
         private Guid phaseId = Guid.NewGuid();
-        private Guid dualPhaseId = Guid.NewGuid();
+        private Guid dualPhaseFirstPhaseId = Guid.NewGuid();
+        private Guid dualPhaseSecondPhaseId = Guid.NewGuid();
         private Dictionary<Guid, Color> grainMap = new Dictionary<Guid, Color>();
+        private List<Guid> immutableGrains = new List<Guid>();
 
         public SeedGrowth(int N, int M) : base(N, M)
         {
@@ -58,6 +60,10 @@ namespace SeedGrowth
             }
         }
 
+        public void useSubstructures(bool cond)
+        {
+            getSeedStateDelegate = this.getCellStateSubstructure;
+        }
         public void useDP(bool cond)
         {
             getSeedStateDelegate = this.getCellStateDualPhase;
@@ -153,6 +159,18 @@ namespace SeedGrowth
                 }
             return newSeeds;
         }
+        public void setRemainingStructureAsImmutable()
+        {
+            immutableGrains.Clear();
+            for (int i = 0; i < Ibound + 1; i++)
+                for (int j = 0; j < Jbound + 1; j++)
+                {
+                    if (seeds[i, j].GrainId != Guid.Empty)
+                    {
+                        immutableGrains.Add(seeds[i, j].GrainId);
+                    }
+                }
+        }
         public void markRemainingStructureAsPhase()
         {
             for (int i = 0; i < Ibound + 1; i++)
@@ -160,12 +178,12 @@ namespace SeedGrowth
                 {
                     if (seeds[i, j].GrainId != Guid.Empty)
                     {
-                        seeds[i, j].GrainId = dualPhaseId;
+                        seeds[i, j].GrainId = dualPhaseFirstPhaseId;
                     }
                 }
             grainMap = new Dictionary<Guid, Color>
             {
-                { dualPhaseId, Color.HotPink },
+                { dualPhaseFirstPhaseId, Color.HotPink },
                 { Guid.Empty,Color.Black},
                 {inclusionId,Color.White }
             };
@@ -293,6 +311,41 @@ namespace SeedGrowth
             return null;
         }
 
+        public Seed getCellStateSubstructure(int i ,int j)
+        {
+            if (seeds[i, j].State == CellState.alive)
+            {
+                return seeds[i, j];
+            }
+            var neighbours = getNeighboursState(seeds, i, j);
+            int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
+
+            if (seeds[i, j].State == CellState.dead && aliveNeighbours != 0)
+            {
+                var grainsOnly = neighbours
+                    .Where(s => s.GrainId != Guid.Empty)
+                    .Where(s => s.GrainId != inclusionId)
+                    .Where(s=> !immutableGrains.Contains(s.GrainId))
+                    .GroupBy(s => s.GrainId);
+
+                var orderedGrains = grainsOnly.OrderByDescending(g => g.Count());
+                if (orderedGrains.Count() > 0)
+                {
+                    return new Seed(i, j, CellState.alive)
+                    {
+                        GrainId = orderedGrains.ElementAt(0).Key,
+                        PhaseId = phaseId
+                    };
+                }
+                else
+                {
+                    return new Seed(i, j, CellState.dead);
+                }
+            }
+            else
+                return new Seed(i, j, CellState.dead);
+        }
+    
         public Seed getCellStateDualPhase(int i, int j)
         {
             if (seeds[i, j].State == CellState.alive)
@@ -307,7 +360,7 @@ namespace SeedGrowth
                 var grainsOnly = neighbours
                     .Where(s => s.GrainId != Guid.Empty)
                     .Where(s => s.GrainId != inclusionId)
-                    .Where(s => s.GrainId != dualPhaseId)
+                    .Where(s => s.GrainId != dualPhaseFirstPhaseId)
                     .GroupBy(s => s.GrainId);
 
                 var orderedGrains = grainsOnly.OrderByDescending(g => g.Count());
@@ -316,7 +369,7 @@ namespace SeedGrowth
                     return new Seed(i, j, CellState.alive)
                     {
                         GrainId = orderedGrains.ElementAt(0).Key,
-                        PhaseId = phaseId
+                        PhaseId = dualPhaseSecondPhaseId
                     };
                 }
                 else
