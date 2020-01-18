@@ -217,6 +217,10 @@ namespace SeedGrowth.Controllers
             }
         }
 
+        public void refresh()
+        {
+            _seedGrowth.init();
+        }
         public void importSeedGrowthData()
         {
             string filePath = _view.getImportFilePath();
@@ -233,15 +237,14 @@ namespace SeedGrowth.Controllers
 
                     _seedGrowth = SeedGrowthFactory.Create(width, height, _neighbourhoodType, _boundoryConditionType);
                     _seedGrowth.setSeeds(data.seeds);
-                    _seedGrowth.setGrainMap(data.grainMap);
-                    _seedGrowth.setCells(data.cells);
+                    _seedGrowth.setGrainMap(data.grainMap);          
                     if (isGBCType)
                     {
                         _seedGrowth.useGBC(true);
                         _seedGrowth._activationThreshold = _activationThreshold;
                     }
                     _seedGrowth.OnGrainChange += _seedGrowth_OnIterationComplette;
-                   // _seedGrowth.PerformIterationStep();
+                    _seedGrowth.init();
                 }   
                 catch(Exception ex)
                 {

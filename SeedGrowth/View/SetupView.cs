@@ -227,13 +227,13 @@ namespace SeedGrowth
             simulationDisplayer?.Dispose();
             simulationDisplayer = new SimulationView
             {
-                Size = new Size(500 + 20, 500 + 45)
+                Size = new Size(300 + 20, 300 + 45)
             };
             simulationDisplayer.OnMouseMove += SimulationDisplayer_OnMouseMove;
-            simulationDisplayer.pictureBox.Size = new Size(500, 500);
+            simulationDisplayer.pictureBox.Size = new Size(300, 300);
             simulationDisplayer.Disposed += Form2_Disposed;
             simulationDisplayer.Show();
-            _controller.performNextStep();
+            _controller.refresh();
         }
 
         public string getExportFilePath()

@@ -238,7 +238,7 @@ namespace SeedGrowth
         {
             var neighbours = getNeighboursState(seeds, i, j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
-            if (aliveNeighbours >= 5)
+            if (aliveNeighbours !=0)
             {
                 var grainsOnly = neighbours
                    .Where(s => s.GrainId != Guid.Empty)
@@ -260,7 +260,7 @@ namespace SeedGrowth
         {
             var neighbours = getNeighboursMoore(seeds, i, j).Where(c => c.XCordinate == i || c.YCordinate == j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
-            if (aliveNeighbours >= 3)
+            if (aliveNeighbours != 0)
             {
                 var grainsOnly = neighbours
                    .Where(s => s.GrainId != Guid.Empty)
@@ -282,7 +282,7 @@ namespace SeedGrowth
         {
             var neighbours = getNeighboursMoore(seeds, i, j).Where(c => c.XCordinate != i && c.YCordinate != j);
             int aliveNeighbours = neighbours.Count(cell => cell.State == CellState.alive);
-            if (aliveNeighbours >= 3)
+            if (aliveNeighbours !=0)
             {
                 var grainsOnly = neighbours
                    .Where(s => s.GrainId != Guid.Empty)
@@ -302,7 +302,7 @@ namespace SeedGrowth
 
         private Seed R4(int i, int j)
         {
-            var r = new Random(DateTime.Now.Millisecond);
+            var r = new Random((int)(DateTime.Now.Ticks & 0x0000FFFF));
             var rx = r.Next(1, 100);
             if (rx >= _activationThreshold)
             {
@@ -616,7 +616,6 @@ namespace SeedGrowth
             {
                 grainMap = this.grainMap,
                 seeds = this.seeds,
-                cells = this.Cells
             };
         }
 
